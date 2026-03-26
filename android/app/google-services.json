@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "645576145768",
+    "project_id": "wegrow-a121c",
+    "storage_bucket": "wegrow-a121c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645576145768:android:b89cb5387037cf22dc74dd",
+        "android_client_info": {
+          "package_name": "com.wegrowbranding.akfcustomer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCB81Ilavav_RcIpxI4Zfa0Ghvj7ajWAas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

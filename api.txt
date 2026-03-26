@@ -1,0 +1,2854 @@
+1. Register
+
+    Request : 
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/register' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDI2MTI5MCwiZXhwIjoxNzc0MjY0ODkwLCJuYmYiOjE3NzQyNjEyOTAsImp0aSI6IlM4T0tiYk5xaGZZYTlrS2oiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.7php7PVenk1eg80gvG-zk2fbWQGngDQQhW00oK_ZbdI' \
+        --data-raw '{
+            "full_name" : "Arul",
+            "email" : "customer@gmail.com",
+            "phone" : "8610061844",
+            "password" : "Admin123@"
+        }'
+
+    Success Response :
+        {
+            "success": true,
+            "data": {
+                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9yZWdpc3RlciIsImlhdCI6MTc3NDI3MDkwMywiZXhwIjoxNzc0Mjc0NTAzLCJuYmYiOjE3NzQyNzA5MDMsImp0aSI6InBQT0habEZKcWFyYjRjYVQiLCJzdWIiOiI1IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.tkM2huraQuhw7ubXI5gEFatJVq3KwMMy27mIP-Ytl4k",
+                "user": {
+                    "customer_code": "CUST-IVXR8E",
+                    "full_name": "Arul",
+                    "email": "custome@gmail.com",
+                    "phone": "8610061841",
+                    "status": "active",
+                    "deleted": 0,
+                    "updated_at": "2026-03-23T13:01:43.000000Z",
+                    "created_at": "2026-03-23T13:01:43.000000Z",
+                    "id": 5,
+                    "user_type": "customer"
+                }
+            },
+            "message": "Customer registered successfully."
+        }
+
+    Error Response :
+        {
+            "success": false,
+            "message": "The email has already been taken.",
+            "errors": {
+                "email": [
+                    "The email has already been taken."
+                ],
+                "phone": [
+                    "The phone has already been taken."
+                ]
+            }
+        }
+
+2. Login
+
+    Request :
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/login' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDI2MTI5MCwiZXhwIjoxNzc0MjY0ODkwLCJuYmYiOjE3NzQyNjEyOTAsImp0aSI6IlM4T0tiYk5xaGZZYTlrS2oiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.7php7PVenk1eg80gvG-zk2fbWQGngDQQhW00oK_ZbdI' \
+        --data-raw '{
+            "email" : "customer@gmail.com",
+            "phone" : "",
+            "password" : "Admin123@"
+        }'
+
+    Success Response:
+        {
+            "success": true,
+            "data": {
+                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDI3MDk4MywiZXhwIjoxNzc0Mjc0NTgzLCJuYmYiOjE3NzQyNzA5ODMsImp0aSI6ImhENUM5UWd0ZHJoTVFtTjciLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.Jv3tfeuJBbKlY_cRC7XN07BHZseMQRHnR98Vphgy_9o",
+                "user": {
+                    "id": 4,
+                    "customer_code": "CUST-QCAOTK",
+                    "full_name": "Arul",
+                    "email": "customer@gmail.com",
+                    "phone": "8610061844",
+                    "profile_image": null,
+                    "gender": "male",
+                    "date_of_birth": null,
+                    "status": "active",
+                    "created_at": "2026-03-23T07:54:20.000000Z",
+                    "updated_at": "2026-03-23T10:40:29.000000Z",
+                    "deleted": 0,
+                    "user_type": "customer"
+                }
+            },
+            "message": "Customer logged in successfully."
+        }
+    
+    Error Response:
+        {
+            "success": false,
+            "message": "Unauthorized.",
+            "errors": {
+                "error": "Invalid credentials"
+            }
+        }
+        {
+            "success": false,
+            "message": "The email field is required when phone is not present.",
+            "errors": {
+                "email": [
+                    "The email field is required when phone is not present."
+                ],
+                "phone": [
+                    "The phone field is required when email is not present."
+                ]
+            }
+        }
+
+3. Home Dashborad:
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/home/dashboard' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDI2MTI5MCwiZXhwIjoxNzc0MjY0ODkwLCJuYmYiOjE3NzQyNjEyOTAsImp0aSI6IlM4T0tiYk5xaGZZYTlrS2oiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.7php7PVenk1eg80gvG-zk2fbWQGngDQQhW00oK_ZbdI'
+    
+    Response:
+        {
+            "success": true,
+            "data": {
+                "banners": [],
+                "categories": [
+                    {
+                        "id": 1,
+                        "category_name": "Mobile Phone",
+                        "parent_category_id": null,
+                        "description": null,
+                        "banner_image": null,
+                        "logo_image": null,
+                        "banner_alt_text": null,
+                        "logo_alt_text": null,
+                        "display_order": 0,
+                        "show_in_menu": 1,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T08:53:42.000000Z",
+                        "updated_at": "2026-03-13T08:55:04.000000Z"
+                    },
+                    {
+                        "id": 2,
+                        "category_name": "Electronics",
+                        "parent_category_id": null,
+                        "description": null,
+                        "banner_image": null,
+                        "logo_image": null,
+                        "banner_alt_text": null,
+                        "logo_alt_text": null,
+                        "display_order": 0,
+                        "show_in_menu": 1,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T11:15:06.000000Z",
+                        "updated_at": "2026-03-13T11:15:06.000000Z"
+                    }
+                ],
+                "recent_products": [
+                    {
+                        "id": 22,
+                        "product_code": "100",
+                        "product_name": "Test",
+                        "category_id": 1,
+                        "price": "200.00",
+                        "cost_price": "300.00",
+                        "stock_quantity": -5,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-23T04:22:32.000000Z",
+                        "updated_at": "2026-03-23T08:34:50.000000Z",
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": [
+                            {
+                                "id": 1,
+                                "file_name": "my_test_file_1773403305.txt",
+                                "original_name": "test_image.txt",
+                                "file_type": "text",
+                                "mime_type": "text/plain",
+                                "file_size": 18,
+                                "extension": "txt",
+                                "file_path": "media/my_test_file_1773403305.txt",
+                                "file_url": "/storage/media/my_test_file_1773403305.txt",
+                                "uploaded_by": 2,
+                                "status": "active",
+                                "deleted": 1,
+                                "created_at": "2026-03-13T12:01:45.000000Z",
+                                "updated_at": "2026-03-13T12:02:14.000000Z",
+                                "pivot": {
+                                    "product_id": 22,
+                                    "media_id": 1,
+                                    "id": 1,
+                                    "is_primary": 1
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "product_code": "P001",
+                        "product_name": "Samsung S23",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": "2026-03-23T04:44:04.000000Z",
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": [
+                            {
+                                "id": 7,
+                                "file_name": "gk7hgizdssr40eisgo2p.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.06.01 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 21425,
+                                "extension": "png",
+                                "file_path": "media/gk7hgizdssr40eisgo2p.png",
+                                "file_url": "/storage/media/gk7hgizdssr40eisgo2p.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:00.000000Z",
+                                "updated_at": "2026-03-23T04:44:00.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 7,
+                                    "id": 3,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 8,
+                                "file_name": "us1wxnoik7fgjk82nud9.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.11.05 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 104487,
+                                "extension": "png",
+                                "file_path": "media/us1wxnoik7fgjk82nud9.png",
+                                "file_url": "/storage/media/us1wxnoik7fgjk82nud9.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 8,
+                                    "id": 4,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 9,
+                                "file_name": "f5sxgxod5hggsakn3mpv.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.42.28 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 56522,
+                                "extension": "png",
+                                "file_path": "media/f5sxgxod5hggsakn3mpv.png",
+                                "file_url": "/storage/media/f5sxgxod5hggsakn3mpv.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 9,
+                                    "id": 5,
+                                    "is_primary": 0
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "product_code": "P002",
+                        "product_name": "Mechanical Keyboard",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 4,
+                        "product_code": "P003",
+                        "product_name": "USB-C Charging Cable",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 5,
+                        "product_code": "P004",
+                        "product_name": "Laptop Stand",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 6,
+                        "product_code": "P005",
+                        "product_name": "Bluetooth Speaker",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 7,
+                        "product_code": "P006",
+                        "product_name": "HDMI Cable",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 8,
+                        "product_code": "P007",
+                        "product_name": "Portable SSD 1TB",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 9,
+                        "product_code": "P008",
+                        "product_name": "Gaming Headset",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 10,
+                        "product_code": "P009",
+                        "product_name": "Webcam Full HD",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    }
+                ],
+                "featured_products": [
+                    {
+                        "id": 3,
+                        "product_code": "P002",
+                        "product_name": "Mechanical Keyboard",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 12,
+                        "product_code": "P011",
+                        "product_name": "Wireless Charger",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 19,
+                        "product_code": "P018",
+                        "product_name": "Monitor Screen Cleaner Kit",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 17,
+                        "product_code": "P016",
+                        "product_name": "Noise Cancelling Earbuds",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 2,
+                        "product_code": "P001",
+                        "product_name": "Samsung S23",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": "2026-03-23T04:44:04.000000Z",
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": [
+                            {
+                                "id": 7,
+                                "file_name": "gk7hgizdssr40eisgo2p.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.06.01 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 21425,
+                                "extension": "png",
+                                "file_path": "media/gk7hgizdssr40eisgo2p.png",
+                                "file_url": "/storage/media/gk7hgizdssr40eisgo2p.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:00.000000Z",
+                                "updated_at": "2026-03-23T04:44:00.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 7,
+                                    "id": 3,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 8,
+                                "file_name": "us1wxnoik7fgjk82nud9.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.11.05 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 104487,
+                                "extension": "png",
+                                "file_path": "media/us1wxnoik7fgjk82nud9.png",
+                                "file_url": "/storage/media/us1wxnoik7fgjk82nud9.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 8,
+                                    "id": 4,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 9,
+                                "file_name": "f5sxgxod5hggsakn3mpv.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.42.28 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 56522,
+                                "extension": "png",
+                                "file_path": "media/f5sxgxod5hggsakn3mpv.png",
+                                "file_url": "/storage/media/f5sxgxod5hggsakn3mpv.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 9,
+                                    "id": 5,
+                                    "is_primary": 0
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": 11,
+                        "product_code": "P010",
+                        "product_name": "Laptop Cooling Pad",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 7,
+                        "product_code": "P006",
+                        "product_name": "HDMI Cable",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 6,
+                        "product_code": "P005",
+                        "product_name": "Bluetooth Speaker",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 16,
+                        "product_code": "P015",
+                        "product_name": "LED Desk Lamp",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 5,
+                        "product_code": "P004",
+                        "product_name": "Laptop Stand",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    }
+                ]
+            },
+            "message": "Home dashboard retrieved successfully."
+        }
+
+4. Home Products
+    
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/products?search=&category_id=&min_price=&max_price=null&sort=price_asc' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDI2MTI5MCwiZXhwIjoxNzc0MjY0ODkwLCJuYmYiOjE3NzQyNjEyOTAsImp0aSI6IlM4T0tiYk5xaGZZYTlrS2oiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.7php7PVenk1eg80gvG-zk2fbWQGngDQQhW00oK_ZbdI'
+    
+    Response:
+        {
+            "success": true,
+            "data": {
+                "total": 21,
+                "limit": 20,
+                "page": 1,
+                "data": [
+                    {
+                        "id": 2,
+                        "product_code": "P001",
+                        "product_name": "Samsung S23",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": "2026-03-23T04:44:04.000000Z",
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": [
+                            {
+                                "id": 7,
+                                "file_name": "gk7hgizdssr40eisgo2p.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.06.01 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 21425,
+                                "extension": "png",
+                                "file_path": "media/gk7hgizdssr40eisgo2p.png",
+                                "file_url": "/storage/media/gk7hgizdssr40eisgo2p.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:00.000000Z",
+                                "updated_at": "2026-03-23T04:44:00.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 7,
+                                    "id": 3,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 8,
+                                "file_name": "us1wxnoik7fgjk82nud9.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.11.05 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 104487,
+                                "extension": "png",
+                                "file_path": "media/us1wxnoik7fgjk82nud9.png",
+                                "file_url": "/storage/media/us1wxnoik7fgjk82nud9.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 8,
+                                    "id": 4,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 9,
+                                "file_name": "f5sxgxod5hggsakn3mpv.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.42.28 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 56522,
+                                "extension": "png",
+                                "file_path": "media/f5sxgxod5hggsakn3mpv.png",
+                                "file_url": "/storage/media/f5sxgxod5hggsakn3mpv.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 9,
+                                    "id": 5,
+                                    "is_primary": 0
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "product_code": "P002",
+                        "product_name": "Mechanical Keyboard",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 4,
+                        "product_code": "P003",
+                        "product_name": "USB-C Charging Cable",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 5,
+                        "product_code": "P004",
+                        "product_name": "Laptop Stand",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 6,
+                        "product_code": "P005",
+                        "product_name": "Bluetooth Speaker",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 7,
+                        "product_code": "P006",
+                        "product_name": "HDMI Cable",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 8,
+                        "product_code": "P007",
+                        "product_name": "Portable SSD 1TB",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 9,
+                        "product_code": "P008",
+                        "product_name": "Gaming Headset",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 10,
+                        "product_code": "P009",
+                        "product_name": "Webcam Full HD",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 11,
+                        "product_code": "P010",
+                        "product_name": "Laptop Cooling Pad",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 12,
+                        "product_code": "P011",
+                        "product_name": "Wireless Charger",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 13,
+                        "product_code": "P012",
+                        "product_name": "Power Bank 20000mAh",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 14,
+                        "product_code": "P013",
+                        "product_name": "Smartphone Tripod",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 15,
+                        "product_code": "P014",
+                        "product_name": "USB Hub 4 Port",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 16,
+                        "product_code": "P015",
+                        "product_name": "LED Desk Lamp",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 17,
+                        "product_code": "P016",
+                        "product_name": "Noise Cancelling Earbuds",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 18,
+                        "product_code": "P017",
+                        "product_name": "External Hard Drive 2TB",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 19,
+                        "product_code": "P018",
+                        "product_name": "Monitor Screen Cleaner Kit",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 20,
+                        "product_code": "P019",
+                        "product_name": "Ergonomic Office Chair Cushion",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    },
+                    {
+                        "id": 21,
+                        "product_code": "P020",
+                        "product_name": "Adjustable Phone Holder",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "category": {
+                            "id": 1,
+                            "category_name": "Mobile Phone",
+                            "parent_category_id": null,
+                            "description": null,
+                            "banner_image": null,
+                            "logo_image": null,
+                            "banner_alt_text": null,
+                            "logo_alt_text": null,
+                            "display_order": 0,
+                            "show_in_menu": 1,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-13T08:53:42.000000Z",
+                            "updated_at": "2026-03-13T08:55:04.000000Z"
+                        },
+                        "media": []
+                    }
+                ]
+            },
+            "message": "Products retrieved successfully."
+        }
+
+5. Product Details
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/products/22' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDI2MTI5MCwiZXhwIjoxNzc0MjY0ODkwLCJuYmYiOjE3NzQyNjEyOTAsImp0aSI6IlM4T0tiYk5xaGZZYTlrS2oiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.7php7PVenk1eg80gvG-zk2fbWQGngDQQhW00oK_ZbdI'
+
+    
+    Response:
+        {
+            "success": true,
+            "data": {
+                "product": {
+                    "id": 22,
+                    "product_code": "100",
+                    "product_name": "Test",
+                    "category_id": 1,
+                    "price": "200.00",
+                    "cost_price": "300.00",
+                    "stock_quantity": -5,
+                    "unit": null,
+                    "description": null,
+                    "status": "active",
+                    "created_by": 1,
+                    "deleted": 0,
+                    "created_at": "2026-03-23T04:22:32.000000Z",
+                    "updated_at": "2026-03-23T08:34:50.000000Z",
+                    "category": {
+                        "id": 1,
+                        "category_name": "Mobile Phone",
+                        "parent_category_id": null,
+                        "description": null,
+                        "banner_image": null,
+                        "logo_image": null,
+                        "banner_alt_text": null,
+                        "logo_alt_text": null,
+                        "display_order": 0,
+                        "show_in_menu": 1,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T08:53:42.000000Z",
+                        "updated_at": "2026-03-13T08:55:04.000000Z"
+                    },
+                    "media": [
+                        {
+                            "id": 1,
+                            "file_name": "my_test_file_1773403305.txt",
+                            "original_name": "test_image.txt",
+                            "file_type": "text",
+                            "mime_type": "text/plain",
+                            "file_size": 18,
+                            "extension": "txt",
+                            "file_path": "media/my_test_file_1773403305.txt",
+                            "file_url": "/storage/media/my_test_file_1773403305.txt",
+                            "uploaded_by": 2,
+                            "status": "active",
+                            "deleted": 1,
+                            "created_at": "2026-03-13T12:01:45.000000Z",
+                            "updated_at": "2026-03-13T12:02:14.000000Z",
+                            "pivot": {
+                                "product_id": 22,
+                                "media_id": 1,
+                                "id": 1,
+                                "is_primary": 1
+                            }
+                        }
+                    ]
+                },
+                "related_products": [
+                    {
+                        "id": 2,
+                        "product_code": "P001",
+                        "product_name": "Samsung S23",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": "2026-03-23T04:44:04.000000Z",
+                        "media": [
+                            {
+                                "id": 7,
+                                "file_name": "gk7hgizdssr40eisgo2p.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.06.01 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 21425,
+                                "extension": "png",
+                                "file_path": "media/gk7hgizdssr40eisgo2p.png",
+                                "file_url": "/storage/media/gk7hgizdssr40eisgo2p.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:00.000000Z",
+                                "updated_at": "2026-03-23T04:44:00.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 7,
+                                    "id": 3,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 8,
+                                "file_name": "us1wxnoik7fgjk82nud9.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.11.05 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 104487,
+                                "extension": "png",
+                                "file_path": "media/us1wxnoik7fgjk82nud9.png",
+                                "file_url": "/storage/media/us1wxnoik7fgjk82nud9.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 8,
+                                    "id": 4,
+                                    "is_primary": 0
+                                }
+                            },
+                            {
+                                "id": 9,
+                                "file_name": "f5sxgxod5hggsakn3mpv.png",
+                                "original_name": "Screenshot 2026-03-20 at 4.42.28 PM.png",
+                                "file_type": "image",
+                                "mime_type": "image/png",
+                                "file_size": 56522,
+                                "extension": "png",
+                                "file_path": "media/f5sxgxod5hggsakn3mpv.png",
+                                "file_url": "/storage/media/f5sxgxod5hggsakn3mpv.png",
+                                "uploaded_by": 1,
+                                "status": "active",
+                                "deleted": 0,
+                                "created_at": "2026-03-23T04:44:01.000000Z",
+                                "updated_at": "2026-03-23T04:44:01.000000Z",
+                                "pivot": {
+                                    "product_id": 2,
+                                    "media_id": 9,
+                                    "id": 5,
+                                    "is_primary": 0
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "product_code": "P002",
+                        "product_name": "Mechanical Keyboard",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 4,
+                        "product_code": "P003",
+                        "product_name": "USB-C Charging Cable",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 5,
+                        "product_code": "P004",
+                        "product_name": "Laptop Stand",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 6,
+                        "product_code": "P005",
+                        "product_name": "Bluetooth Speaker",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 7,
+                        "product_code": "P006",
+                        "product_name": "HDMI Cable",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 8,
+                        "product_code": "P007",
+                        "product_name": "Portable SSD 1TB",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 9,
+                        "product_code": "P008",
+                        "product_name": "Gaming Headset",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 10,
+                        "product_code": "P009",
+                        "product_name": "Webcam Full HD",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    },
+                    {
+                        "id": 11,
+                        "product_code": "P010",
+                        "product_name": "Laptop Cooling Pad",
+                        "category_id": 1,
+                        "price": "0.00",
+                        "cost_price": "0.00",
+                        "stock_quantity": 0,
+                        "unit": null,
+                        "description": null,
+                        "status": "active",
+                        "created_by": 1,
+                        "deleted": 0,
+                        "created_at": "2026-03-13T14:38:33.000000Z",
+                        "updated_at": null,
+                        "media": []
+                    }
+                ]
+            },
+            "message": "Product details retrieved successfully."
+        }
+
+6. My Orders:
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/orders' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "total": 4,
+                "limit": 10,
+                "page": 1,
+                "data": [
+                    {
+                        "id": 5,
+                        "order_number": "ORD-JOOPQUGR",
+                        "customer_id": 4,
+                        "branch_id": 1,
+                        "total_amount": "5400.00",
+                        "discount_amount": "0.00",
+                        "final_amount": "5400.00",
+                        "payment_status": "pending",
+                        "order_status": "pending",
+                        "payment_method": "cod",
+                        "address_id": 3,
+                        "placed_at": "2026-03-24T03:11:00.000000Z"
+                    },
+                    {
+                        "id": 4,
+                        "order_number": "ORD-VH6V08OO",
+                        "customer_id": 4,
+                        "branch_id": 1,
+                        "total_amount": "5600.00",
+                        "discount_amount": "280.00",
+                        "final_amount": "5320.00",
+                        "payment_status": "pending",
+                        "order_status": "pending",
+                        "payment_method": "cod",
+                        "address_id": 3,
+                        "placed_at": "2026-03-24T03:07:34.000000Z"
+                    },
+                    {
+                        "id": 3,
+                        "order_number": "ORD-A7DUYG1L",
+                        "customer_id": 4,
+                        "branch_id": 1,
+                        "total_amount": "1000.00",
+                        "discount_amount": "0.00",
+                        "final_amount": "1000.00",
+                        "payment_status": "pending",
+                        "order_status": "pending",
+                        "payment_method": "cod",
+                        "address_id": 3,
+                        "placed_at": "2026-03-24T02:53:41.000000Z"
+                    },
+                    {
+                        "id": 2,
+                        "order_number": "ORD-DJTVYVH4",
+                        "customer_id": 4,
+                        "branch_id": 1,
+                        "total_amount": "1000.00",
+                        "discount_amount": "0.00",
+                        "final_amount": "1000.00",
+                        "payment_status": "pending",
+                        "order_status": "pending",
+                        "payment_method": "cod",
+                        "address_id": 2,
+                        "placed_at": "2026-03-23T08:34:50.000000Z"
+                    }
+                ]
+            },
+            "message": "Orders retrieved successfully."
+        }
+
+7. Order Details
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/orders/2' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "id": 2,
+                "order_number": "ORD-DJTVYVH4",
+                "customer_id": 4,
+                "branch_id": 1,
+                "total_amount": "1000.00",
+                "discount_amount": "0.00",
+                "final_amount": "1000.00",
+                "payment_status": "pending",
+                "order_status": "pending",
+                "payment_method": "cod",
+                "address_id": 2,
+                "placed_at": "2026-03-23T08:34:50.000000Z",
+                "items": [
+                    {
+                        "id": 3,
+                        "order_id": 2,
+                        "product_id": 22,
+                        "quantity": 5,
+                        "price": "200.00",
+                        "total_price": "1000.00",
+                        "product": {
+                            "id": 22,
+                            "product_code": "100",
+                            "product_name": "Test",
+                            "category_id": 1,
+                            "price": "200.00",
+                            "cost_price": "300.00",
+                            "stock_quantity": -65,
+                            "unit": null,
+                            "description": null,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-23T04:22:32.000000Z",
+                            "updated_at": "2026-03-24T03:11:00.000000Z",
+                            "media": [
+                                {
+                                    "id": 1,
+                                    "file_name": "my_test_file_1773403305.txt",
+                                    "original_name": "test_image.txt",
+                                    "file_type": "text",
+                                    "mime_type": "text/plain",
+                                    "file_size": 18,
+                                    "extension": "txt",
+                                    "file_path": "media/my_test_file_1773403305.txt",
+                                    "file_url": "/storage/media/my_test_file_1773403305.txt",
+                                    "uploaded_by": 2,
+                                    "status": "active",
+                                    "deleted": 1,
+                                    "created_at": "2026-03-13T12:01:45.000000Z",
+                                    "updated_at": "2026-03-13T12:02:14.000000Z",
+                                    "pivot": {
+                                        "product_id": 22,
+                                        "media_id": 1,
+                                        "id": 1,
+                                        "is_primary": 1
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "message": "Order details retrieved successfully."
+        }
+
+8. Get wishlist
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/wishlist' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "wishlist_id": 2,
+                "items": [
+                    {
+                        "id": 3,
+                        "wishlist_id": 2,
+                        "product_id": 22,
+                        "product": {
+                            "id": 22,
+                            "product_code": "100",
+                            "product_name": "Test",
+                            "category_id": 1,
+                            "price": "200.00",
+                            "cost_price": "300.00",
+                            "stock_quantity": -65,
+                            "unit": null,
+                            "description": null,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-23T04:22:32.000000Z",
+                            "updated_at": "2026-03-24T03:11:00.000000Z",
+                            "media": [
+                                {
+                                    "id": 1,
+                                    "file_name": "my_test_file_1773403305.txt",
+                                    "original_name": "test_image.txt",
+                                    "file_type": "text",
+                                    "mime_type": "text/plain",
+                                    "file_size": 18,
+                                    "extension": "txt",
+                                    "file_path": "media/my_test_file_1773403305.txt",
+                                    "file_url": "/storage/media/my_test_file_1773403305.txt",
+                                    "uploaded_by": 2,
+                                    "status": "active",
+                                    "deleted": 1,
+                                    "created_at": "2026-03-13T12:01:45.000000Z",
+                                    "updated_at": "2026-03-13T12:02:14.000000Z",
+                                    "pivot": {
+                                        "product_id": 22,
+                                        "media_id": 1,
+                                        "id": 1,
+                                        "is_primary": 1
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "message": "Wishlist retrieved successfully."
+        }
+
+9. Add/Update Wishlist
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/wishlist/update' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs' \
+        --data '{
+            "product_id" : 22,
+            "action" : "add"
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": [],
+            "message": "Product added to wishlist."
+        }
+        {
+            "success": true,
+            "data": [],
+            "message": "Product removed from wishlist."
+        }
+
+10. Recently Viewed:
+    
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/recently-viewed' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "total": 1,
+                "limit": 10,
+                "page": 1,
+                "data": [
+                    {
+                        "id": 1,
+                        "customer_id": 4,
+                        "product_id": 22,
+                        "created_at": "2026-03-23T08:52:30.000000Z",
+                        "updated_at": "2026-03-23T08:52:30.000000Z",
+                        "product": {
+                            "id": 22,
+                            "product_code": "100",
+                            "product_name": "Test",
+                            "category_id": 1,
+                            "price": "200.00",
+                            "cost_price": "300.00",
+                            "stock_quantity": -65,
+                            "unit": null,
+                            "description": null,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-23T04:22:32.000000Z",
+                            "updated_at": "2026-03-24T03:11:00.000000Z",
+                            "media": [
+                                {
+                                    "id": 1,
+                                    "file_name": "my_test_file_1773403305.txt",
+                                    "original_name": "test_image.txt",
+                                    "file_type": "text",
+                                    "mime_type": "text/plain",
+                                    "file_size": 18,
+                                    "extension": "txt",
+                                    "file_path": "media/my_test_file_1773403305.txt",
+                                    "file_url": "/storage/media/my_test_file_1773403305.txt",
+                                    "uploaded_by": 2,
+                                    "status": "active",
+                                    "deleted": 1,
+                                    "created_at": "2026-03-13T12:01:45.000000Z",
+                                    "updated_at": "2026-03-13T12:02:14.000000Z",
+                                    "pivot": {
+                                        "product_id": 22,
+                                        "media_id": 1,
+                                        "id": 1,
+                                        "is_primary": 1
+                                    }
+                                }
+                            ],
+                            "category": {
+                                "id": 1,
+                                "category_name": "Mobile Phone",
+                                "parent_category_id": null,
+                                "description": null,
+                                "banner_image": null,
+                                "logo_image": null,
+                                "banner_alt_text": null,
+                                "logo_alt_text": null,
+                                "display_order": 0,
+                                "show_in_menu": 1,
+                                "status": "active",
+                                "created_by": 1,
+                                "deleted": 0,
+                                "created_at": "2026-03-13T08:53:42.000000Z",
+                                "updated_at": "2026-03-13T08:55:04.000000Z"
+                            }
+                        }
+                    }
+                ]
+            },
+            "message": "Recently viewed products retrieved successfully."
+        }
+
+11. Marked as viewed:
+
+    Request:
+        curl --location --request POST 'http://127.0.0.1:8000/api/v1/customer-app/recently-viewed/add/22' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs'
+
+    Response:
+        {
+            "success": true,
+            "data": [],
+            "message": "Recent view recorded."
+        }
+
+12. Get Profile
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/profile' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "id": 4,
+                "customer_code": "CUST-QCAOTK",
+                "full_name": "Arul",
+                "email": "customer@gmail.com",
+                "phone": "8610061844",
+                "profile_image": null,
+                "gender": "male",
+                "date_of_birth": null,
+                "status": "active",
+                "created_at": "2026-03-23T07:54:20.000000Z",
+                "updated_at": "2026-03-23T10:40:29.000000Z",
+                "deleted": 0
+            },
+            "message": "Profile retrieved successfully."
+        }
+
+13. Edit Profile
+
+    Request:
+        curl --location --request PUT 'http://127.0.0.1:8000/api/v1/customer-app/profile' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs' \
+        --data '{
+            "full_name" : "Arul",
+            "phone" : "8610061844",
+            "gender" : "male"
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "id": 4,
+                "customer_code": "CUST-QCAOTK",
+                "full_name": "Arul",
+                "email": "customer@gmail.com",
+                "phone": "8610061844",
+                "profile_image": null,
+                "gender": "male",
+                "date_of_birth": null,
+                "status": "active",
+                "created_at": "2026-03-23T07:54:20.000000Z",
+                "updated_at": "2026-03-23T10:40:29.000000Z",
+                "deleted": 0
+            },
+            "message": "Profile updated successfully."
+        }
+
+14. Edit Address
+
+    Request:
+        curl --location --request PUT 'http://127.0.0.1:8000/api/v1/customer-app/addresses/2' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyNTYwNCwiZXhwIjoxNzc0MzI5MjA0LCJuYmYiOjE3NzQzMjU2MDQsImp0aSI6IllPbFRzN3l4bHVuS0dXY1kiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.Dno1Wl91_XEDWm0VUCjChczh6BJ5GKCrsZvV1AcQqrY' \
+        --data '{
+            "name" : "Arul",
+            "phone" : "9000090000",
+            "address_line1" : "2/14 A3",
+            "address_line2" : "",
+            "city" : "Sivakasi",
+            "state" : "Tamil Nadu",
+            "pincode" : "626123",
+            "country" : "India",
+            "is_default" : true
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "id": 3,
+                "customer_id": 4,
+                "name": "Arul",
+                "phone": "9000090000",
+                "address_line1": "2/14 A3",
+                "address_line2": null,
+                "city": "Sivakasi",
+                "state": "Tamil Nadu",
+                "pincode": "626123",
+                "country": "India",
+                "is_default": 1,
+                "created_at": "2026-03-24T02:49:41.000000Z"
+            },
+            "message": "Address updated successfully."
+        }
+
+15. Delete Address
+
+    Request:
+        curl --location --request DELETE 'http://127.0.0.1:8000/api/v1/customer-app/addresses/2' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyNTYwNCwiZXhwIjoxNzc0MzI5MjA0LCJuYmYiOjE3NzQzMjU2MDQsImp0aSI6IllPbFRzN3l4bHVuS0dXY1kiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.Dno1Wl91_XEDWm0VUCjChczh6BJ5GKCrsZvV1AcQqrY'
+
+    Response:
+        {
+            "success": true,
+            "data": [],
+            "message": "Address deleted successfully."
+        }
+
+16. Get product reviews
+    
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/products/22/reviews' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyNTYwNCwiZXhwIjoxNzc0MzI5MjA0LCJuYmYiOjE3NzQzMjU2MDQsImp0aSI6IllPbFRzN3l4bHVuS0dXY1kiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.Dno1Wl91_XEDWm0VUCjChczh6BJ5GKCrsZvV1AcQqrY'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "total": 1,
+                "limit": 10,
+                "page": 1,
+                "data": [
+                    {
+                        "id": 1,
+                        "product_id": 22,
+                        "customer_id": 4,
+                        "rating": 4,
+                        "review": "Nice product. Anyone can buy.",
+                        "created_at": "2026-03-23T08:55:51.000000Z",
+                        "customer": {
+                            "id": 4,
+                            "full_name": "Arul",
+                            "profile_image": null
+                        }
+                    }
+                ]
+            },
+            "message": "Reviews retrieved successfully."
+        }
+
+17. Add Reviews
+    
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/reviews/add' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyNTYwNCwiZXhwIjoxNzc0MzI5MjA0LCJuYmYiOjE3NzQzMjU2MDQsImp0aSI6IllPbFRzN3l4bHVuS0dXY1kiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.Dno1Wl91_XEDWm0VUCjChczh6BJ5GKCrsZvV1AcQqrY' \
+        --data '{
+            "product_id" : 22,
+            "rating" : 4,
+            "review" : "Nice product. Anyone can buy."
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "id": 1,
+                "product_id": 22,
+                "customer_id": 4,
+                "rating": 4,
+                "review": "Nice product. Anyone can buy.",
+                "created_at": "2026-03-23T08:55:51.000000Z"
+            },
+            "message": "Review submitted successfully."
+        }
+
+18. Support Meta
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/support-meta/faq' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyNTYwNCwiZXhwIjoxNzc0MzI5MjA0LCJuYmYiOjE3NzQzMjU2MDQsImp0aSI6IllPbFRzN3l4bHVuS0dXY1kiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.Dno1Wl91_XEDWm0VUCjChczh6BJ5GKCrsZvV1AcQqrY'
+
+    Request Params Must ne faq, help-center, about, terms, privacy-policy
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "meta_key": "faq",
+                "meta_value": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+            },
+            "message": "Support info retrieved successfully."
+        }
+
+19. Get Cart:
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/cart' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDI1MzU2NCwiZXhwIjoxNzc0MjU3MTY0LCJuYmYiOjE3NzQyNTM1NjQsImp0aSI6ImZ5RkJ1TGJ5SlY4U05qejUiLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.MZjS9AT00fe-szMTriVKfMMZRBm8vut1xu7qz-557aI' \
+        --data ''
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "cart_id": 3,
+                "items": [
+                    {
+                        "id": 6,
+                        "cart_id": 3,
+                        "product_id": 22,
+                        "quantity": 5,
+                        "product": {
+                            "id": 22,
+                            "product_code": "100",
+                            "product_name": "Test",
+                            "category_id": 1,
+                            "price": "200.00",
+                            "cost_price": "300.00",
+                            "stock_quantity": -5,
+                            "unit": null,
+                            "description": null,
+                            "status": "active",
+                            "created_by": 1,
+                            "deleted": 0,
+                            "created_at": "2026-03-23T04:22:32.000000Z",
+                            "updated_at": "2026-03-23T08:34:50.000000Z",
+                            "media": [
+                                {
+                                    "id": 1,
+                                    "file_name": "my_test_file_1773403305.txt",
+                                    "original_name": "test_image.txt",
+                                    "file_type": "text",
+                                    "mime_type": "text/plain",
+                                    "file_size": 18,
+                                    "extension": "txt",
+                                    "file_path": "media/my_test_file_1773403305.txt",
+                                    "file_url": "/storage/media/my_test_file_1773403305.txt",
+                                    "uploaded_by": 2,
+                                    "status": "active",
+                                    "deleted": 1,
+                                    "created_at": "2026-03-13T12:01:45.000000Z",
+                                    "updated_at": "2026-03-13T12:02:14.000000Z",
+                                    "pivot": {
+                                        "product_id": 22,
+                                        "media_id": 1,
+                                        "id": 1,
+                                        "is_primary": 1
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "total_amount": 1000
+            },
+            "message": "Cart retrieved successfully."
+        }
+
+20. Cart Add/Update
+    
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/cart/update' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs' \
+        --data '{
+            "product_id" : 22,
+            "quantity" : 5
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": [],
+            "message": "Cart updated successfully."
+        }
+
+21. Fetch Addresses
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/addresses' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs' \
+        --data ''
+
+    Response:
+        {
+            "success": true,
+            "data": [
+                {
+                    "id": 3,
+                    "customer_id": 4,
+                    "name": "Arul",
+                    "phone": "9000090000",
+                    "address_line1": "2/14 A2",
+                    "address_line2": null,
+                    "city": "Sivakasi",
+                    "state": "Tamil Nadu",
+                    "pincode": "626123",
+                    "country": "India",
+                    "is_default": 1,
+                    "created_at": "2026-03-24T02:49:41.000000Z"
+                }
+            ],
+            "message": "Addresses retrieved successfully."
+        }
+
+22. Add Addresses
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/addresses/add' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs' \
+        --data '{
+            "name" : "Arul",
+            "phone" : "9000090000",
+            "address_line1" : "2/14 A2",
+            "address_line2" : "",
+            "city" : "Sivakasi",
+            "state" : "Tamil Nadu",
+            "pincode" : "626123",
+            "country" : "India",
+            "is_default" : true
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "name": "Arul",
+                "phone": "9000090000",
+                "address_line1": "2/14 A2",
+                "address_line2": null,
+                "city": "Sivakasi",
+                "state": "Tamil Nadu",
+                "pincode": "626123",
+                "country": "India",
+                "is_default": 1,
+                "customer_id": 4,
+                "created_at": "2026-03-24T02:49:41.000000Z",
+                "id": 3
+            },
+            "message": "Address added successfully."
+        }
+
+23. Apply Coupon
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/checkout/apply-coupon' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs' \
+        --data '{
+            "coupon_code" : "C001",
+            "amount" : 10000
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "coupon_code": "C001",
+                "discount_amount": 500,
+                "final_amount": 9500
+            },
+            "message": "Coupon applied successfully."
+        }
+
+    Error Responses:
+        {
+            "success": false,
+            "message": "Invalid or inactive coupon code."
+        }
+        {
+            "success": false,
+            "message": "Minimum order amount not reached for this coupon.",
+            "errors": {
+                "min_order_amount": "5000.00"
+            }
+        }
+
+24. Place Order
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/checkout/place-order' \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvYXBpL3YxL2N1c3RvbWVyLWFwcC9sb2dpbiIsImlhdCI6MTc3NDMyMDQ1MiwiZXhwIjoxNzc0MzI0MDUyLCJuYmYiOjE3NzQzMjA0NTIsImp0aSI6Im9QNlpGYlBqRnlMS21hdU4iLCJzdWIiOiI0IiwicHJ2IjoiMWQwYTAyMGFjZjVjNGI2YzQ5Nzk4OWRmMWFiZjBmYmQ0ZThjOGQ2MyIsInVzZXJfdHlwZSI6ImN1c3RvbWVyIn0.pIhBEXjzILAccGQyuIQydhCUGHpM8GuZO7WB96nH9Cs' \
+        --data '{
+            "address_id" : 2,
+            "payment_method" : "cod",
+            "coupon_code" : "C001"
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "order_number": "ORD-A7DUYG1L",
+                "customer_id": 4,
+                "branch_id": 1,
+                "total_amount": 1000,
+                "discount_amount": 0,
+                "final_amount": 1000,
+                "payment_status": "pending",
+                "order_status": "pending",
+                "payment_method": "cod",
+                "address_id": 3,
+                "placed_at": "2026-03-24T02:53:41.000000Z",
+                "id": 3
+            },
+            "message": "Order placed successfully."
+        }
+
+25. Check Customer Email Exists:
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/check-customer-email-exists' \
+        --header 'Content-Type: application/json' \
+        --data-raw '{
+            "email" : "iqarulx@gmail.com"
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "exists": true,
+                "otp": 824420
+            },
+            "message": "OTP sent successfully."
+        }
+
+    Error Response:
+        {
+            "success": true,
+            "data": {
+                "exists": false
+            },
+            "message": "Customer email does not exist."
+        }
+
+26. Change Password:
+
+    Request:
+        curl --location 'http://127.0.0.1:8000/api/v1/customer-app/change-password' \
+        --header 'Content-Type: application/json' \
+        --data-raw '{
+            "email" : "iqarulx@gmail.com",
+            "password" : "Admin123@"
+        }'
+
+    Response:
+        {
+            "success": true,
+            "data": {
+                "success": true
+            },
+            "message": "Password changed successfully."
+        }
