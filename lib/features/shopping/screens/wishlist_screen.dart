@@ -289,7 +289,7 @@ class _WishlistProductCard extends StatelessWidget {
                           shoppingProvider.toggleWishlist(
                             token,
                             product.id,
-                            'remove',
+                            'delete',
                           );
                         }
                       },

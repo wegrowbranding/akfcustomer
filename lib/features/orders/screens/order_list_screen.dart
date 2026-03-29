@@ -9,7 +9,8 @@ import '../providers/order_provider.dart';
 import 'order_detail_screen.dart';
 
 class OrderListScreen extends StatefulWidget {
-  const OrderListScreen({super.key});
+  const OrderListScreen({super.key, this.popNeeded = false});
+  final bool popNeeded;
 
   @override
   State<OrderListScreen> createState() => _OrderListScreenState();
@@ -103,16 +104,27 @@ class _OrderListScreenState extends State<OrderListScreen> {
     );
   }
 
-  Widget _buildHeader() => const Padding(
-    padding: EdgeInsets.fromLTRB(24, 20, 24, 20),
-    child: Text(
-      StringConstants.orderHistory,
-      style: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.w300,
-        fontFamily: 'Serif',
-        color: Color(0xFF1A1A1A),
-      ),
+  Widget _buildHeader() => Padding(
+    padding: const EdgeInsets.fromLTRB(24, 20, 24, 20),
+    child: Row(
+      children: [
+        if (widget.popNeeded)
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios, size: 20),
+            padding: EdgeInsets.zero,
+            alignment: Alignment.centerLeft,
+          ),
+        const Text(
+          StringConstants.orderHistory,
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w300,
+            fontFamily: 'Serif',
+            color: Color(0xFF1A1A1A),
+          ),
+        ),
+      ],
     ),
   );
 

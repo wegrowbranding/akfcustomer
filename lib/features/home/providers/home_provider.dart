@@ -56,13 +56,21 @@ class HomeProvider extends ChangeNotifier {
     String token, {
     String search = '',
     int? categoryId,
+    String? minPrice,
+    String? maxPrice,
+    String? sort,
   }) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
-      final Map<String, dynamic> queryParams = {'search': search};
+      final Map<String, dynamic> queryParams = {
+        'search': search,
+        'max_price': maxPrice ?? '',
+        'min_price': minPrice ?? '',
+        'sort': sort ?? '', //price_asc,price_desc,newest
+      };
       if (categoryId != null) {
         queryParams['category_id'] = categoryId;
       }

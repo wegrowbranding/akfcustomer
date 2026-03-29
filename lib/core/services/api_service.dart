@@ -19,6 +19,8 @@ class ApiService {
   late Dio _dio;
   final String _baseUrl = ApiConstants.baseUrl;
 
+  static void Function()? logoutCallback;
+
   void _setupInterceptors() {
     // Request interceptor to add auth token
     _dio.interceptors.add(
@@ -50,6 +52,15 @@ class ApiService {
             );
             debugPrint('Response Data: ${response.data}');
           }
+
+          // Check if response contains valid_token: false
+          if (response.data is Map<String, dynamic>) {
+            final data = response.data as Map<String, dynamic>;
+            if (data['valid_token'] != null && data['valid_token'] == false) {
+              _handleLogout();
+            }
+          }
+
           handler.next(response);
         },
         onError: (DioException error, handler) {
@@ -60,16 +71,32 @@ class ApiService {
             }
           }
 
-          // Handle auth errors
-          if (error.response?.statusCode == 401) {
-            // Token expired, clear auth
-            PreferenceService.clearAuth();
+          // Handle auth errors and not 200 status with valid_token: false
+          if (error.response != null) {
+            final response = error.response!;
+            final statusCode = response.statusCode;
+
+            if (statusCode != 200 && response.data is Map<String, dynamic>) {
+              final data = response.data as Map<String, dynamic>;
+              if (data['valid_token'] != null && data['valid_token'] == false) {
+                _handleLogout();
+              }
+            }
+
+            if (statusCode == 401) {
+              _handleLogout();
+            }
           }
 
           handler.next(error);
         },
       ),
     );
+  }
+
+  void _handleLogout() {
+    PreferenceService.clearAuth();
+    logoutCallback?.call();
   }
 
   Future<Response<T>> get<T>(
@@ -165,8 +192,23 @@ class ApiException implements Exception {
   ApiException({required this.message, this.statusCode, this.error});
 
   factory ApiException.fromDioError(DioException dioError) {
-    String message = 'An unexpected error occurred';
     final int? statusCode = dioError.response?.statusCode;
+    final dynamic responseData = dioError.response?.data;
+
+    // First priority: Check if the server provided a specific error message
+    if (responseData is Map<String, dynamic> &&
+        responseData.containsKey('message')) {
+      final serverMessage = responseData['message'].toString();
+      if (serverMessage.isNotEmpty) {
+        return ApiException(
+          message: serverMessage,
+          statusCode: statusCode,
+          error: responseData,
+        );
+      }
+    }
+
+    String message = 'An unexpected error occurred';
 
     switch (dioError.type) {
       case DioExceptionType.connectionTimeout:
@@ -194,6 +236,9 @@ class ApiException implements Exception {
           case 500:
             message = 'Internal server error. Please try again later.';
             break;
+          case 522:
+            message = 'Connection timed out. Please try again later.';
+            break;
           case 502:
           case 503:
           case 504:
@@ -210,7 +255,7 @@ class ApiException implements Exception {
         message = 'Connection failed. Please check your internet connection.';
         break;
       case DioExceptionType.unknown:
-        message = dioError.message ?? 'An unknown error occurred';
+        message = 'An unexpected error occurred. Please try again.';
         break;
       case DioExceptionType.badCertificate:
         message = 'Certificate error. Please check your SSL configuration.';
@@ -228,5 +273,5 @@ class ApiException implements Exception {
   final dynamic error;
 
   @override
-  String toString() => 'ApiException: $message';
+  String toString() => message;
 }

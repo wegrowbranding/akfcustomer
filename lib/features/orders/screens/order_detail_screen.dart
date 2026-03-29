@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/string_constants.dart';
+import '../../../core/widgets/app_snackbar.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../providers/order_provider.dart';
 
@@ -100,12 +101,108 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         const SizedBox(height: 32),
                         _buildCostSummary(order),
                         const SizedBox(height: 40),
+                        if (order.orderStatus.toLowerCase() != 'cancelled')
+                          _buildCancelButton(context, orderProvider),
+                        const SizedBox(height: 80),
                       ],
                     ),
                   ),
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCancelButton(BuildContext context, OrderProvider provider) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: GestureDetector(
+          onTap: () => _showCancelConfirmation(context, provider),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 18),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.red.withValues(alpha: 0.05),
+                  blurRadius: 15,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: const Center(
+              child: Text(
+                'REQUEST CANCEL',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.5,
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+  void _showCancelConfirmation(
+    BuildContext parentContext,
+    OrderProvider provider,
+  ) {
+    showDialog(
+      context: parentContext,
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        title: const Text(
+          'Cancel Order?',
+          style: TextStyle(fontFamily: 'Serif', fontWeight: FontWeight.w300),
+        ),
+        content: const Text(
+          'Are you sure you want to request a cancellation for this arrangement?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('STAY'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext); // ✅ use dialog context to close
+
+              final token = Provider.of<AuthProvider>(
+                parentContext,
+                listen: false,
+              ).token;
+
+              if (token != null) {
+                final success = await provider.cancelOrder(
+                  token,
+                  widget.orderId,
+                );
+
+                if (success && mounted) {
+                  AppSnackBar.show(
+                    parentContext,
+                    message: 'Cancellation request sent successfully',
+                    type: SnackBarType.success,
+                  );
+                } else if (mounted) {
+                  AppSnackBar.show(
+                    parentContext,
+                    message: provider.error ?? 'Failed to cancel order',
+                    type: SnackBarType.error,
+                  );
+                }
+              }
+            },
+            child: const Text('CANCEL', style: TextStyle(color: Colors.red)),
           ),
         ],
       ),

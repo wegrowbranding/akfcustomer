@@ -25,7 +25,8 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   bool _isAdding = false;
-  bool _isInWishlist = false;
+  int _currentImageIndex = 0;
+  final PageController _pageController = PageController();
 
   // Design Tokens - Simplified to use AppTheme
   final Color primaryColor = AppTheme.primaryColor;
@@ -34,6 +35,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final Color accentColor = const Color(
     0xFF4A5D4E,
   ); // Sage Green from onboarding for pro look
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   Future<void> _addToCart() async {
     final auth = Provider.of<AuthProvider>(context, listen: false);
@@ -70,7 +77,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
 
     if (success && mounted) {
-      setState(() => _isInWishlist = addOrRemove);
       AppSnackBar.show(
         context,
         message: StringConstants.wishlistUpdated,
@@ -92,7 +98,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         shopping.markAsViewed(token, widget.productId);
         shopping.checkProductInWishlist(token, widget.productId);
 
-        _isInWishlist = shopping.isInWishlist ?? false;
       }
     });
   }
@@ -138,18 +143,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ),
         actions: [
-          CircleAvatar(
-            backgroundColor: Colors.white.withValues(alpha: 0.9),
-            child: IconButton(
-              onPressed: _isInWishlist
-                  ? () => _toggleWishlist(false)
-                  : () => _toggleWishlist(true),
-              icon: Icon(
-                _isInWishlist ? Icons.favorite : Icons.favorite_border,
-                color: _isInWishlist ? primaryColor : Colors.black87,
-                size: 20,
-              ),
-            ),
+          Consumer<ShoppingProvider>(
+            builder: (context, shopping, child) {
+              final isProductWishlisted = shopping.isWishlisted(widget.productId);
+              return CircleAvatar(
+                backgroundColor: Colors.white.withValues(alpha: 0.9),
+                child: IconButton(
+                  onPressed: isProductWishlisted
+                      ? () => _toggleWishlist(false)
+                      : () => _toggleWishlist(true),
+                  icon: Icon(
+                    isProductWishlisted ? Icons.favorite : Icons.favorite_border,
+                    color: isProductWishlisted ? primaryColor : Colors.black87,
+                    size: 20,
+                  ),
+                ),
+              );
+            },
           ),
           const SizedBox(width: 12),
           CircleAvatar(
@@ -317,49 +327,151 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       Container(
         height: MediaQuery.of(context).size.height * 0.55,
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(40),
+            bottomRight: Radius.circular(40),
+          ),
+        ),
+        child: ClipRRect(
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(40),
             bottomRight: Radius.circular(40),
           ),
-          image: DecorationImage(
-            image: NetworkImage(
-              product.primaryMediaId != null
-                  ? ApiConstants.storageUrl(product.primaryMediaId!)
-                  : 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?q=80&w=1000&auto=format&fit=crop',
-            ),
-            onError: (exception, stackTrace) {},
-
-            fit: BoxFit.cover,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: product.media.length,
+            onPageChanged: (index) =>
+                setState(() => _currentImageIndex = index),
+            itemBuilder: (context, index) {
+              final media = product.media[index];
+              return InkWell(
+                onTap: () => _showFullScreenImage(media.id),
+                child: Hero(
+                  tag: 'product_image_${media.id}',
+                  child: Image.network(
+                    ApiConstants.storageUrl(media.id),
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) {
+                        return child;
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: primaryColor.withValues(alpha: 0.2),
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                              : null,
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: backgroundColor,
+                      child: Icon(
+                        Icons.image_not_supported_outlined,
+                        color: primaryColor.withValues(alpha: 0.2),
+                        size: 40,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
         ),
       ),
+      // Image Counter/Indicator
+      if (product.media.length > 1)
+        Positioned(
+          bottom: 30,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: product.media
+                .asMap()
+                .entries
+                .map(
+                  (entry) => Container(
+                    width: _currentImageIndex == entry.key ? 24 : 8,
+                    height: 8,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: _currentImageIndex == entry.key
+                          ? primaryColor
+                          : Colors.white.withValues(alpha: 0.5),
+                      boxShadow: [
+                        if (_currentImageIndex == entry.key)
+                          BoxShadow(
+                            color: primaryColor.withValues(alpha: 0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 2),
+                          ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
       // Subtle Gradient Overlay at the bottom of image
       Positioned.fill(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(40),
-              bottomRight: Radius.circular(40),
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.transparent, Colors.black.withValues(alpha: 0.2)],
+        child: IgnorePointer(
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(40),
+                bottomRight: Radius.circular(40),
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withValues(alpha: 0.15),
+                ],
+              ),
             ),
           ),
         ),
       ),
     ],
   );
+
+  void _showFullScreenImage(int mediaId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.close, color: Colors.white),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+          body: Center(
+            child: InteractiveViewer(
+              minScale: 0.5,
+              maxScale: 4,
+              child: Hero(
+                tag: 'product_image_$mediaId',
+                child: Image.network(
+                  ApiConstants.storageUrl(mediaId),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildReviewsSection(int productId) => InkWell(
     onTap: () {
@@ -570,21 +682,70 @@ class _RelatedProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    product.primaryMediaId != null
-                        ? ApiConstants.storageUrl(product.primaryMediaId!)
-                        : 'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=400&auto=format&fit=crop',
+            child: Stack(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        product.primaryMediaId != null
+                            ? ApiConstants.storageUrl(product.primaryMediaId!)
+                            : 'https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=400&auto=format&fit=crop',
+                      ),
+                      onError: (exception, stackTrace) {},
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  onError: (exception, stackTrace) {},
-                  fit: BoxFit.cover,
                 ),
-              ),
+                Positioned(
+                  top: 12,
+                  right: 12,
+                  child: Consumer<ShoppingProvider>(
+                    builder: (context, shopping, child) {
+                      final isWishlisted = shopping.isWishlisted(product.id);
+                      return GestureDetector(
+                        onTap: () async {
+                          final auth = Provider.of<AuthProvider>(
+                            context,
+                            listen: false,
+                          );
+                          if (auth.token != null) {
+                            final success = await shopping.toggleWishlist(
+                              auth.token!,
+                              product.id,
+                              isWishlisted ? 'delete' : 'add',
+                            );
+                            if (success && context.mounted) {
+                              AppSnackBar.show(
+                                context,
+                                message: StringConstants.wishlistUpdated,
+                                type: SnackBarType.success,
+                              );
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            isWishlisted
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border_rounded,
+                            size: 14,
+                            color: primaryColor,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
           Padding(

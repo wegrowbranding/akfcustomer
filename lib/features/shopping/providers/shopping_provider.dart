@@ -28,8 +28,11 @@ class ShoppingProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  bool _isInWishlist = false;
-  bool? get isInWishlist => _isInWishlist;
+  bool _isSingleProductInWishlist = false;
+  bool get isSingleProductInWishlist => _isSingleProductInWishlist;
+
+  bool isWishlisted(int productId) =>
+      _wishlist?.items.any((item) => item.productId == productId) ?? false;
 
   Future<void> fetchWishlist(String token) async {
     _isLoading = true;
@@ -95,7 +98,7 @@ class ShoppingProvider extends ChangeNotifier {
 
       final Map<String, dynamic> data = response.data as Map<String, dynamic>;
       if (data['success'] == true) {
-        _isInWishlist = data['data']['is_in_wishlist'] ?? false;
+        _isSingleProductInWishlist = data['data']['is_in_wishlist'] ?? false;
       }
     } finally {
       notifyListeners();
@@ -176,6 +179,8 @@ class ShoppingProvider extends ChangeNotifier {
 
       final Map<String, dynamic> data = response.data as Map<String, dynamic>;
       if (data['success'] == true) {
+        _appliedCoupon =
+            null; // Clear coupon on cart update to avoid stale totals
         await fetchCart(token);
         return true;
       } else {

@@ -89,6 +89,13 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  void forceLogout() {
+    _token = null;
+    _user = null;
+    _isLoading = false;
+    notifyListeners();
+  }
+
   Future<Map<String, dynamic>> checkEmailExists(String email) async {
     _isLoading = true;
     notifyListeners();

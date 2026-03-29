@@ -80,4 +80,33 @@ class OrderProvider extends ChangeNotifier {
     _lastOrder = order;
     notifyListeners();
   }
+
+  Future<bool> cancelOrder(String token, int orderId) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final response = await _apiService.post(
+        ApiConstants.cancelOrder(orderId),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      final Map<String, dynamic> data = response.data as Map<String, dynamic>;
+      if (data['success'] == true) {
+        await fetchOrderDetails(token, orderId); // Refresh details
+        await fetchOrders(token); // Update the list as well
+        return true;
+      } else {
+        _error = data['message'];
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

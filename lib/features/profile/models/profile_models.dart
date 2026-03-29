@@ -12,22 +12,24 @@ class UserProfile {
   });
 
   factory UserProfile.fromJson(Map<String, dynamic> json) => UserProfile(
-    id: json['id'],
-    customerCode: json['customer_code'] ?? '',
-    fullName: json['full_name'] ?? '',
-    email: json['email'] ?? '',
-    phone: json['phone'] ?? '',
-    profileImage: json['profile_image'],
-    gender: json['gender'] ?? '',
-    dateOfBirth: json['date_of_birth'],
-    status: json['status'] ?? '',
+    id: json['id'] is String ? int.parse(json['id']) : (json['id'] ?? 0),
+    customerCode: json['customer_code']?.toString() ?? '',
+    fullName: json['full_name']?.toString() ?? '',
+    email: json['email']?.toString() ?? '',
+    phone: json['phone']?.toString() ?? '',
+    profileImage: json['profile_image'] is String 
+        ? int.tryParse(json['profile_image']) 
+        : json['profile_image'],
+    gender: json['gender']?.toString() ?? '',
+    dateOfBirth: json['date_of_birth']?.toString(),
+    status: json['status']?.toString() ?? '',
   );
   final int id;
   final String customerCode;
   final String fullName;
   final String email;
   final String phone;
-  final String? profileImage;
+  final int? profileImage;
   final String gender;
   final String? dateOfBirth;
   final String status;

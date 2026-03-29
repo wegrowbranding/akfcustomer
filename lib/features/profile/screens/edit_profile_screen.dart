@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/string_constants.dart';
 import '../../../core/widgets/app_snackbar.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -44,6 +49,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     final profileProvider = Provider.of<ProfileProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
+    final token = authProvider.token;
+
+    if (token == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -76,7 +88,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 10),
-                          _buildAvatarSection(),
+                          _buildAvatarSection(profileProvider, token),
                           const SizedBox(height: 40),
 
                           _buildSectionLabel('IDENTITY'),
@@ -103,7 +115,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           _buildDropdown(),
 
                           const SizedBox(height: 48),
-                          _buildSaveButton(profileProvider, authProvider),
+                          _buildSaveButton(profileProvider, token),
                           const SizedBox(height: 40),
                         ],
                       ),
@@ -154,7 +166,149 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     ),
   );
 
-  Widget _buildAvatarSection() => Center(
+  Future<void> _pickImage(
+    ImageSource source,
+    ProfileProvider provider,
+    String token,
+  ) async {
+    try {
+      final picker = ImagePicker();
+      final pickedFile = await picker.pickImage(
+        source: source,
+        imageQuality: 50,
+        maxWidth: 500,
+        maxHeight: 500,
+      );
+
+      if (pickedFile != null && mounted) {
+        final bytes = await File(pickedFile.path).readAsBytes();
+        final base64Image = base64Encode(bytes);
+
+        final success = await provider.updateProfilePhoto(token, base64Image);
+        if (success && mounted) {
+          AppSnackBar.show(
+            context,
+            message: 'Profile photo updated',
+            type: SnackBarType.success,
+          );
+        } else if (mounted) {
+          AppSnackBar.show(
+            context,
+            message: provider.error ?? 'Failed to update photo',
+            type: SnackBarType.error,
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        AppSnackBar.show(
+          context,
+          message: 'Error picking image: $e',
+          type: SnackBarType.error,
+        );
+      }
+    }
+  }
+
+  void _showImagePickerOptions(ProfileProvider provider, String token) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Profile Photo',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF1A1A1A),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildPickerOption(
+                  icon: Icons.camera_alt_rounded,
+                  label: 'Camera',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickImage(ImageSource.camera, provider, token);
+                  },
+                ),
+                _buildPickerOption(
+                  icon: Icons.photo_library_rounded,
+                  label: 'Gallery',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickImage(ImageSource.gallery, provider, token);
+                  },
+                ),
+                if (widget.profile.profileImage != null)
+                  _buildPickerOption(
+                    icon: Icons.delete_outline_rounded,
+                    label: 'Remove',
+                    color: Colors.redAccent,
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final success = await provider.deleteProfilePhoto(token);
+                      if (success && mounted) {
+                        AppSnackBar.show(
+                          context,
+                          message: 'Photo removed',
+                          type: SnackBarType.success,
+                        );
+                      }
+                    },
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPickerOption({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    Color? color,
+  }) => Column(
+    children: [
+      InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(20),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: (color ?? primaryColor).withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(icon, color: color ?? primaryColor, size: 28),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        label,
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: color ?? Colors.black87,
+        ),
+      ),
+    ],
+  );
+
+  Widget _buildAvatarSection(ProfileProvider provider, String token) => Center(
     child: Stack(
       children: [
         Container(
@@ -166,34 +320,44 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               width: 2,
             ),
           ),
-          child: const CircleAvatar(
-            radius: 55,
-            backgroundColor: Colors.white,
-            backgroundImage: NetworkImage(
-              'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop',
+          child: GestureDetector(
+            onTap: () => _showImagePickerOptions(provider, token),
+            child: CircleAvatar(
+              radius: 55,
+              backgroundColor: Colors.white,
+              backgroundImage: (provider.profile?.profileImage ?? widget.profile.profileImage) != null
+                  ? NetworkImage(
+                    ApiConstants.storageUrl(provider.profile?.profileImage ?? widget.profile.profileImage!),
+                  )
+                  : const NetworkImage(
+                    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop',
+                  ),
             ),
           ),
         ),
         Positioned(
           bottom: 5,
           right: 5,
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: primaryColor,
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 2),
-              boxShadow: [
-                BoxShadow(
-                  color: primaryColor.withValues(alpha: 0.3),
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.camera_alt_rounded,
-              size: 16,
-              color: Colors.white,
+          child: GestureDetector(
+            onTap: () => _showImagePickerOptions(provider, token),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: primaryColor,
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2),
+                boxShadow: [
+                  BoxShadow(
+                    color: primaryColor.withValues(alpha: 0.3),
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.camera_alt_rounded,
+                size: 16,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
@@ -293,14 +457,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildSaveButton(
     ProfileProvider profileProvider,
-    AuthProvider authProvider,
+    String token,
   ) => GestureDetector(
     onTap: profileProvider.isLoading
         ? null
         : () async {
             if (_formKey.currentState!.validate()) {
               final success = await profileProvider.editProfile(
-                authProvider.token!,
+                token,
                 _nameController.text,
                 _phoneController.text,
                 _gender,

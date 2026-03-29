@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/string_constants.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
@@ -100,6 +101,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
+  Future<void> _updateQuantity(
+    ShoppingProvider provider,
+    int productId,
+    int newQuantity,
+  ) async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final success = await provider.updateCart(
+      authProvider.token!,
+      productId,
+      newQuantity,
+    );
+    if (!success && mounted) {
+      AppSnackBar.show(
+        context,
+        message: provider.error ?? 'Update failed',
+        type: SnackBarType.error,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final shoppingProvider = Provider.of<ShoppingProvider>(context);
@@ -148,6 +169,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 20),
+                        _buildSectionLabel('BAG OVERVIEW'),
+                        const SizedBox(height: 12),
+                        _buildCartItemsList(cart, shoppingProvider),
+
+                        const SizedBox(height: 32),
 
                         _buildSectionLabel(StringConstants.shippingDestination),
                         const SizedBox(height: 12),
@@ -390,12 +416,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     ),
     child: Column(
       children: [
-        _priceRow(StringConstants.boutiqueSubtotal, '₹$subtotal'),
+        _priceRow(
+          StringConstants.boutiqueSubtotal,
+          '₹${subtotal.toStringAsFixed(2)}',
+        ),
         if (discount > 0) ...[
           const SizedBox(height: 16),
           _priceRow(
             StringConstants.artisanalDiscount,
-            '-₹$discount',
+            '-₹${discount.toStringAsFixed(2)}',
             isHighlight: true,
           ),
         ],
@@ -421,7 +450,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ),
             Text(
-              '₹$finalAmount',
+              '₹${finalAmount.toStringAsFixed(2)}',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w900,
@@ -497,7 +526,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
             ),
             Text(
-              '₹$finalAmount',
+              '₹${finalAmount.toStringAsFixed(2)}',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w900,
@@ -572,5 +601,108 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             ),
           ),
         ],
+      );
+
+  Widget _buildCartItemsList(Cart cart, ShoppingProvider provider) => Column(
+    children: cart.items.map((item) => _buildCartItem(item, provider)).toList(),
+  );
+
+  Widget _buildCartItem(CartItem item, ShoppingProvider provider) => Container(
+    margin: const EdgeInsets.only(bottom: 12),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.02),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    ),
+    child: Row(
+      children: [
+        // Product Image
+        Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(15),
+            image: item.product.primaryMediaId != null
+                ? DecorationImage(
+                    image: NetworkImage(
+                      ApiConstants.storageUrl(item.product.primaryMediaId!),
+                    ),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+          ),
+        ),
+        const SizedBox(width: 16),
+        // Product details
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                item.product.productName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                  letterSpacing: 0.2,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '₹${item.product.price}',
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Quantity selectors
+        Row(
+          children: [
+            _buildQtyButton(
+              icon: Icons.remove,
+              onTap: () => _updateQuantity(provider, item.productId, item.quantity - 1),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                item.quantity.toString(),
+                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
+              ),
+            ),
+            _buildQtyButton(
+              icon: Icons.add,
+              onTap: () => _updateQuantity(provider, item.productId, item.quantity + 1),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+
+  Widget _buildQtyButton({required IconData icon, required VoidCallback onTap}) =>
+      GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+          ),
+          child: Icon(icon, size: 14, color: textColor),
+        ),
       );
 }

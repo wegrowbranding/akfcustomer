@@ -302,7 +302,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                       Text(
-                        '₹${(double.parse(item.product.price)) * (item.quantity as int)}',
+                        '₹${((double.parse(item.product.price)) * (item.quantity as int)).toStringAsFixed(2)}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w900,
                           fontSize: 14,
@@ -365,7 +365,7 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
             Text(
-              '₹${cart.totalAmount}',
+              '₹${(cart.totalAmount as double).toStringAsFixed(2)}',
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w900,

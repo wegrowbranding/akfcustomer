@@ -166,4 +166,61 @@ class ProfileProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<bool> updateProfilePhoto(String token, String base64Image) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final response = await _apiService.put(
+        ApiConstants.updateProfilePhoto,
+        data: {'profile_image': base64Image},
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      final Map<String, dynamic> data = response.data as Map<String, dynamic>;
+      if (data['success'] == true) {
+        _profile = UserProfile.fromJson(data['data']);
+        return true;
+      } else {
+        _error = data['message'];
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> deleteProfilePhoto(String token) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final response = await _apiService.delete(
+        ApiConstants.deleteProfilePhoto,
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      final Map<String, dynamic> data = response.data as Map<String, dynamic>;
+      if (data['success'] == true) {
+        _profile = UserProfile.fromJson(data['data']);
+        return true;
+      } else {
+        _error = data['message'];
+        return false;
+      }
+    } catch (e) {
+      _error = e.toString();
+      return false;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
 }

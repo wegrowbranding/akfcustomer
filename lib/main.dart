@@ -19,6 +19,10 @@ void main() async {
 
   final apiService = ApiService();
   final authProvider = AuthProvider(apiService: apiService);
+
+  // Set logout callback
+  ApiService.logoutCallback = authProvider.forceLogout;
+
   await authProvider.init();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

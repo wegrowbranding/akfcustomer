@@ -16,10 +16,12 @@ class ProductListScreen extends StatefulWidget {
     super.key,
     this.categoryId,
     this.categoryName,
+    this.searchText,
     this.popNeeded,
   });
   final int? categoryId;
   final String? categoryName;
+  final String? searchText;
   final bool? popNeeded;
 
   @override
@@ -28,6 +30,9 @@ class ProductListScreen extends StatefulWidget {
 
 class _ProductListScreenState extends State<ProductListScreen> {
   final _searchController = TextEditingController();
+  final _minPriceController = TextEditingController();
+  final _maxPriceController = TextEditingController();
+  String _selectedSort = '';
 
   // Design Tokens - Simplified to use AppTheme
   final Color primaryColor = AppTheme.primaryColor;
@@ -38,13 +43,19 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   void initState() {
     super.initState();
+    _searchController.text = widget.searchText ?? '';
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       if (token != null) {
-        Provider.of<HomeProvider>(
+        Provider.of<ShoppingProvider>(
           context,
           listen: false,
-        ).fetchProducts(token, categoryId: widget.categoryId);
+        ).fetchWishlist(token);
+        Provider.of<HomeProvider>(context, listen: false).fetchProducts(
+          token,
+          categoryId: widget.categoryId,
+          search: widget.searchText ?? '',
+        );
       }
     });
   }
@@ -52,52 +63,249 @@ class _ProductListScreenState extends State<ProductListScreen> {
   void _onSearch() {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
     if (token != null) {
+      setState(() {}); // Ensure UI shows loading or current state
       Provider.of<HomeProvider>(context, listen: false).fetchProducts(
         token,
         search: _searchController.text.trim(),
         categoryId: widget.categoryId,
+        minPrice: _minPriceController.text.trim(),
+        maxPrice: _maxPriceController.text.trim(),
+        sort: _selectedSort,
       );
     }
+  }
+
+  void _resetLocalFilters() {
+    setState(() {
+      _searchController.clear();
+      _minPriceController.clear();
+      _maxPriceController.clear();
+      _selectedSort = '';
+    });
+  }
+
+  void _showFilterBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Refine Search',
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1A1A1A),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close_rounded),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                const Text(
+                  'Price Range',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _minPriceController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'Min ₹',
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: TextField(
+                        controller: _maxPriceController,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          hintText: 'Max ₹',
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                const Text(
+                  'Sort By',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8,
+                  children: [
+                    _buildSortChip('Newest', 'newest', setModalState),
+                    _buildSortChip(
+                      'Price: Low to High',
+                      'price_asc',
+                      setModalState,
+                    ),
+                    _buildSortChip(
+                      'Price: High to Low',
+                      'price_desc',
+                      setModalState,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          setModalState(_resetLocalFilters);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text('Reset'),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _onSearch();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: primaryColor,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text('Apply'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSortChip(String label, String value, StateSetter setModalState) {
+    final isSelected = _selectedSort == value;
+    return ChoiceChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (selected) {
+        setModalState(() {
+          _selectedSort = selected ? value : '';
+        });
+      },
+      selectedColor: primaryColor.withValues(alpha: 0.1),
+      labelStyle: TextStyle(
+        color: isSelected ? primaryColor : Colors.black87,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: BorderSide(color: isSelected ? primaryColor : Colors.grey[300]!),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final homeProvider = Provider.of<HomeProvider>(context);
 
-    return Scaffold(
-      backgroundColor: backgroundColor,
-      body: Stack(
-        children: [
-          // Background Decorative Element
-          Positioned(
-            top: -50,
-            right: -50,
-            child: Container(
-              width: 200,
-              height: 200,
-              decoration: BoxDecoration(
-                color: primaryColor.withValues(alpha: 0.03),
-                shape: BoxShape.circle,
+    return PopScope(
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          final token = Provider.of<AuthProvider>(context, listen: false).token;
+          if (token != null) {
+            // Reset provider to all products when this screen is closed
+            Provider.of<HomeProvider>(
+              context,
+              listen: false,
+            ).fetchProducts(token);
+          }
+        }
+      },
+      child: Scaffold(
+        backgroundColor: backgroundColor,
+        body: Stack(
+          children: [
+            // Background Decorative Element
+            Positioned(
+              top: -50,
+              right: -50,
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: primaryColor.withValues(alpha: 0.03),
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
-          ),
 
-          SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. Editorial Header
-                _buildHeader(),
+            SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // 1. Editorial Header
+                  _buildHeader(),
 
-                // 2. Search Section
-                _buildSearchField(),
+                  // 2. Search Section
+                  _buildSearchField(),
 
-                // 3. Product Grid
-                Expanded(child: _buildContent(homeProvider)),
-              ],
+                  // 3. Product Grid
+                  Expanded(child: _buildContent(homeProvider)),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -163,7 +371,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ),
           prefixIcon: Icon(Icons.search_rounded, color: primaryColor, size: 22),
           suffixIcon: IconButton(
-            onPressed: _onSearch,
+            onPressed: _showFilterBottomSheet,
             icon: Icon(Icons.tune_rounded, color: primaryColor, size: 20),
           ),
           border: InputBorder.none,
@@ -286,43 +494,46 @@ class _ProductListItemCard extends StatelessWidget {
                   Positioned(
                     top: 12,
                     right: 12,
-                    child: GestureDetector(
-                      onTap: () async {
-                        final auth = Provider.of<AuthProvider>(
-                          context,
-                          listen: false,
-                        );
-                        final shopping = Provider.of<ShoppingProvider>(
-                          context,
-                          listen: false,
-                        );
-                        if (auth.token != null) {
-                          final success = await shopping.toggleWishlist(
-                            auth.token!,
-                            product.id,
-                            'add',
-                          );
-                          if (success && context.mounted) {
-                            AppSnackBar.show(
+                    child: Consumer<ShoppingProvider>(
+                      builder: (context, shopping, child) {
+                        final isWishlisted = shopping.isWishlisted(product.id);
+                        return GestureDetector(
+                          onTap: () async {
+                            final auth = Provider.of<AuthProvider>(
                               context,
-                              message: StringConstants.wishlistUpdated,
-                              type: SnackBarType.success,
+                              listen: false,
                             );
-                          }
-                        }
+                            if (auth.token != null) {
+                              final success = await shopping.toggleWishlist(
+                                auth.token!,
+                                product.id,
+                                isWishlisted ? 'delete' : 'add',
+                              );
+                              if (success && context.mounted) {
+                                AppSnackBar.show(
+                                  context,
+                                  message: StringConstants.wishlistUpdated,
+                                  type: SnackBarType.success,
+                                );
+                              }
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              isWishlisted
+                                  ? Icons.favorite_rounded
+                                  : Icons.favorite_border_rounded,
+                              size: 14,
+                              color: primaryColor,
+                            ),
+                          ),
+                        );
                       },
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.favorite_border_rounded,
-                          size: 14,
-                          color: primaryColor,
-                        ),
-                      ),
                     ),
                   ),
                 ],

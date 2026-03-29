@@ -25,6 +25,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final Color secondaryColor = AppTheme.secondaryColor;
   final Color backgroundColor = AppTheme.backgroundColor;
 
+  final TextEditingController _searchFieldController = TextEditingController();
+  int _currentBannerIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +35,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
       if (token != null) {
         Provider.of<HomeProvider>(context, listen: false).fetchDashboard(token);
+        Provider.of<ShoppingProvider>(
+          context,
+          listen: false,
+        ).fetchWishlist(token);
         Provider.of<HomeProvider>(
           context,
           listen: false,
@@ -90,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             const SizedBox(height: 10),
 
             // 1. Featured Promo Banner
-            _buildPromoBanner(),
+            _buildPromoBanner(data.banners),
 
             const SizedBox(height: 32),
 
@@ -202,135 +209,301 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildSearchField() => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const ProductListScreen(popNeeded: true),
-          ),
-        );
+    child: TextField(
+      controller: _searchFieldController,
+      onChanged: (value) {
+        setState(() {});
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
+      onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
+      decoration: InputDecoration(
+        hintText: StringConstants.searchHint,
+        prefixIcon: Icon(Icons.search_rounded, color: primaryColor, size: 22),
+        suffixIcon: _searchFieldController.text.isNotEmpty
+            ? IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ProductListScreen(
+                        searchText: _searchFieldController.text,
+                        popNeeded: true,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(Icons.arrow_forward, color: primaryColor, size: 22),
+              )
+            : null,
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
-            ),
-          ],
+          borderSide: BorderSide(color: Colors.grey.shade300),
         ),
-        child: Row(
-          children: [
-            Icon(Icons.search_rounded, color: primaryColor, size: 22),
-            const SizedBox(width: 12),
-            Text(
-              StringConstants.searchHint,
-              style: TextStyle(
-                color: Colors.black.withValues(alpha: 0.2),
-                fontSize: 14,
-              ),
-            ),
-          ],
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(24),
+          borderSide: BorderSide(color: primaryColor),
         ),
       ),
     ),
   );
 
-  Widget _buildPromoBanner() => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 20),
-    child: Container(
-      height: 180,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [primaryColor, secondaryColor],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: primaryColor.withValues(alpha: 0.2),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            right: -20,
-            bottom: -20,
-            child: Icon(
-              Icons.local_florist,
-              size: 150,
-              color: Colors.white.withValues(alpha: 0.15),
+  // Widget _buildPromoBanner(List<dynamic> banners) => banners.isNotEmpty
+  //     ? const SizedBox.shrink()
+  //     : Padding(
+  //         padding: const EdgeInsets.symmetric(horizontal: 20),
+  //         child: Container(
+  //           height: 180,
+  //           width: double.infinity,
+  //           decoration: BoxDecoration(
+  //             gradient: LinearGradient(
+  //               colors: [primaryColor, secondaryColor],
+  //               begin: Alignment.topLeft,
+  //               end: Alignment.bottomRight,
+  //             ),
+  //             borderRadius: BorderRadius.circular(24),
+  //             boxShadow: [
+  //               BoxShadow(
+  //                 color: primaryColor.withValues(alpha: 0.2),
+  //                 blurRadius: 15,
+  //                 offset: const Offset(0, 8),
+  //               ),
+  //             ],
+  //           ),
+  //           child: Stack(
+  //             children: [
+  //               Positioned(
+  //                 right: -20,
+  //                 bottom: -20,
+  //                 child: Icon(
+  //                   Icons.local_florist,
+  //                   size: 150,
+  //                   color: Colors.white.withValues(alpha: 0.15),
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.all(24),
+  //                 child: Column(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   mainAxisAlignment: MainAxisAlignment.center,
+  //                   children: [
+  //                     const Text(
+  //                       StringConstants.bloomIntoSpring,
+  //                       style: TextStyle(
+  //                         color: Colors.white,
+  //                         fontSize: 24,
+  //                         fontWeight: FontWeight.bold,
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 8),
+  //                     Text(
+  //                       StringConstants.seasonalBouquetsPromo,
+  //                       style: TextStyle(
+  //                         color: Colors.white.withValues(alpha: 0.9),
+  //                         fontSize: 14,
+  //                       ),
+  //                     ),
+  //                     const SizedBox(height: 16),
+  //                     InkWell(
+  //                       onTap: () {
+  //                         Navigator.push(
+  //                           context,
+  //                           MaterialPageRoute(
+  //                             builder: (_) =>
+  //                                 const ProductListScreen(popNeeded: true),
+  //                           ),
+  //                         );
+  //                       },
+  //                       child: Container(
+  //                         padding: const EdgeInsets.symmetric(
+  //                           horizontal: 16,
+  //                           vertical: 8,
+  //                         ),
+  //                         decoration: BoxDecoration(
+  //                           color: Colors.white,
+  //                           borderRadius: BorderRadius.circular(12),
+  //                         ),
+  //                         child: Text(
+  //                           StringConstants.shopNow,
+  //                           style: TextStyle(
+  //                             color: primaryColor,
+  //                             fontSize: 12,
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+
+  Widget _buildPromoBanner(List<dynamic> banners) {
+    if (banners.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          height: 180,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [primaryColor, secondaryColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: primaryColor.withValues(alpha: 0.2),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  StringConstants.bloomIntoSpring,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+          child: Stack(
+            children: [
+              Positioned(
+                right: -20,
+                bottom: -20,
+                child: Icon(
+                  Icons.local_florist,
+                  size: 150,
+                  color: Colors.white.withValues(alpha: 0.15),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  StringConstants.seasonalBouquetsPromo,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.9),
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            const ProductListScreen(popNeeded: true),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      StringConstants.shopNow,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      StringConstants.bloomIntoSpring,
                       style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 12,
+                        color: Colors.white,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                    Text(
+                      StringConstants.seasonalBouquetsPromo,
+                      style: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.9),
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const ProductListScreen(popNeeded: true),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          StringConstants.shopNow,
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 180,
+            child: PageView.builder(
+              itemCount: banners.length,
+              onPageChanged: (index) {
+                setState(() => _currentBannerIndex = index);
+              },
+              itemBuilder: (context, index) {
+                final banner = banners[index];
+                final mediaId = banner['media']['id'];
+
+                return Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.grey.shade200,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      ApiConstants.storageUrl(mediaId),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      loadingBuilder: (context, child, progress) {
+                        if (progress == null) return child;
+                        return const Center(child: CircularProgressIndicator());
+                      },
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Center(child: Icon(Icons.image_not_supported)),
+                    ),
+                  ),
+                );
+              },
             ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // 🔥 Indicator
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: banners
+                .asMap()
+                .entries
+                .map(
+                  (entry) => Container(
+                    width: _currentBannerIndex == entry.key ? 20 : 8,
+                    height: 8,
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      color: _currentBannerIndex == entry.key
+                          ? primaryColor
+                          : Colors.grey.withOpacity(0.4),
+                    ),
+                  ),
+                )
+                .toList(),
           ),
         ],
       ),
-    ),
-  );
+    );
+  }
 
   Widget _buildCategoryItem(Category cat) => Padding(
     padding: const EdgeInsets.only(right: 20),
@@ -454,43 +627,46 @@ class _ProductCard extends StatelessWidget {
                 Positioned(
                   top: 12,
                   right: 12,
-                  child: GestureDetector(
-                    onTap: () async {
-                      final auth = Provider.of<AuthProvider>(
-                        context,
-                        listen: false,
-                      );
-                      final shopping = Provider.of<ShoppingProvider>(
-                        context,
-                        listen: false,
-                      );
-                      if (auth.token != null) {
-                        final success = await shopping.toggleWishlist(
-                          auth.token!,
-                          product.id,
-                          'add',
-                        );
-                        if (success && context.mounted) {
-                          AppSnackBar.show(
+                  child: Consumer<ShoppingProvider>(
+                    builder: (context, shopping, child) {
+                      final isWishlisted = shopping.isWishlisted(product.id);
+                      return GestureDetector(
+                        onTap: () async {
+                          final auth = Provider.of<AuthProvider>(
                             context,
-                            message: StringConstants.wishlistUpdated,
-                            type: SnackBarType.success,
+                            listen: false,
                           );
-                        }
-                      }
+                          if (auth.token != null) {
+                            final success = await shopping.toggleWishlist(
+                              auth.token!,
+                              product.id,
+                              isWishlisted ? 'delete' : 'add',
+                            );
+                            if (success && context.mounted) {
+                              AppSnackBar.show(
+                                context,
+                                message: StringConstants.wishlistUpdated,
+                                type: SnackBarType.success,
+                              );
+                            }
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            isWishlisted
+                                ? Icons.favorite_rounded
+                                : Icons.favorite_border,
+                            size: 16,
+                            color: primaryColor,
+                          ),
+                        ),
+                      );
                     },
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.favorite_border,
-                        size: 16,
-                        color: primaryColor,
-                      ),
-                    ),
                   ),
                 ),
               ],

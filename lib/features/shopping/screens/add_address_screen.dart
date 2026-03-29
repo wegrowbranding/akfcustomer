@@ -159,6 +159,11 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                           'Phone Number',
                           Icons.phone_android_rounded,
                           keyboardType: TextInputType.phone,
+                          validator: (val) => val == null || val.isEmpty
+                              ? 'Required'
+                              : val.length != 10
+                              ? 'Invalid phone number'
+                              : null,
                         ),
 
                         const SizedBox(height: 32),
@@ -205,6 +210,11 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                                 'Pincode',
                                 Icons.pin_drop_rounded,
                                 keyboardType: TextInputType.number,
+                                validator: (val) => val == null || val.isEmpty
+                                    ? 'Required'
+                                    : val.length != 6
+                                    ? 'Invalid pincode'
+                                    : null,
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -288,6 +298,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     IconData icon, {
     bool isRequired = true,
     TextInputType? keyboardType,
+    String? Function(String?)? validator,
   }) => Container(
     decoration: BoxDecoration(
       color: Colors.white,
@@ -317,9 +328,10 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
           horizontal: 20,
         ),
       ),
-      validator: isRequired
-          ? (val) => val == null || val.isEmpty ? 'Required' : null
-          : null,
+      validator:
+          validator ??
+          (val) =>
+              isRequired && (val == null || val.isEmpty) ? 'Required' : null,
     ),
   );
 
