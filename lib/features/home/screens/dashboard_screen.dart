@@ -465,7 +465,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       fit: BoxFit.cover,
                       width: double.infinity,
                       loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
+                        if (progress == null) {
+                          return child;
+                        }
                         return const Center(child: CircularProgressIndicator());
                       },
                       errorBuilder: (context, error, stackTrace) =>
@@ -494,7 +496,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       borderRadius: BorderRadius.circular(4),
                       color: _currentBannerIndex == entry.key
                           ? primaryColor
-                          : Colors.grey.withOpacity(0.4),
+                          : Colors.grey.withValues(alpha: 0.4),
                     ),
                   ),
                 )

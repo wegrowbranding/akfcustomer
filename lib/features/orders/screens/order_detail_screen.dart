@@ -99,6 +99,20 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         const SizedBox(height: 16),
                         _buildItemsList(order),
                         const SizedBox(height: 32),
+                        if (order.history.isNotEmpty) ...[
+                          const Text(
+                            'Order Journey',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w300,
+                              fontFamily: 'Serif',
+                              color: Color(0xFF1A1A1A),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          _buildOrderHistory(order),
+                          const SizedBox(height: 32),
+                        ],
                         _buildCostSummary(order),
                         const SizedBox(height: 40),
                         if (order.orderStatus.toLowerCase() != 'cancelled')
@@ -115,6 +129,119 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
+
+  Widget _buildOrderHistory(dynamic order) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+        ),
+        child: Column(
+          children: List.generate(order.history.length, (index) {
+            final history = order.history[index];
+            final isLast = index == order.history.length - 1;
+            return IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        width: 12,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: index == 0 ? primaryColor : Colors.black12,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      if (!isLast)
+                        Expanded(
+                          child: Container(
+                            width: 1,
+                            color: Colors.black12,
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: isLast ? 0 : 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                history.status.replaceAll('_', ' ').toUpperCase(),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 11,
+                                  letterSpacing: 1,
+                                  color: index == 0 ? primaryColor : Colors.black54,
+                                ),
+                              ),
+                              Text(
+                                history.createdAt.split(' ')[0],
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.black26,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            history.remarks,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          if (history.assignment?.deliveryStaff?.staff != null) ...[
+                            const SizedBox(height: 8),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delivery_dining_rounded,
+                                    size: 14,
+                                    color: primaryColor,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    history.assignment!.deliveryStaff!.staff!.fullName,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
+      );
 
   Widget _buildCancelButton(BuildContext context, OrderProvider provider) =>
       Padding(
