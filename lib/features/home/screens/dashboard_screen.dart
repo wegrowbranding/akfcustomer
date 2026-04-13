@@ -5,6 +5,7 @@ import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/string_constants.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
+import '../../../core/widgets/login_prompt.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../shopping/providers/shopping_provider.dart';
 import '../models/home_models.dart';
@@ -33,8 +34,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final token = Provider.of<AuthProvider>(context, listen: false).token;
+      Provider.of<HomeProvider>(context, listen: false).fetchDashboard(token);
       if (token != null) {
-        Provider.of<HomeProvider>(context, listen: false).fetchDashboard(token);
         Provider.of<ShoppingProvider>(
           context,
           listen: false,
@@ -80,9 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       color: primaryColor,
       onRefresh: () async {
         final token = Provider.of<AuthProvider>(context, listen: false).token;
-        if (token != null) {
-          await homeProvider.fetchDashboard(token);
-        }
+        await homeProvider.fetchDashboard(token);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -651,6 +650,8 @@ class _ProductCard extends StatelessWidget {
                                 type: SnackBarType.success,
                               );
                             }
+                          } else {
+                            LoginPrompt.show(context);
                           }
                         },
                         child: Container(
@@ -725,6 +726,8 @@ class _ProductCard extends StatelessWidget {
                               type: SnackBarType.success,
                             );
                           }
+                        } else {
+                          LoginPrompt.show(context);
                         }
                       },
                       child: Container(

@@ -1,13 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/string_constants.dart';
+import '../../../core/routes/app_routes.dart';
+import '../../../core/widgets/login_prompt.dart';
 
 import '../../auth/providers/auth_provider.dart';
+import '../../auth/screens/login_screen.dart';
+import '../../notifications/providers/notification_provider.dart';
 import '../../orders/screens/order_list_screen.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../shopping/screens/cart_screen.dart';
-import '../../shopping/screens/wishlist_screen.dart';
 import 'dashboard_screen.dart';
 import 'product_list_screen.dart';
 
@@ -20,6 +25,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      if (authProvider.isAuthenticated) {
+        Provider.of<NotificationProvider>(
+          context,
+          listen: false,
+        ).fetchUnreadCount(authProvider.token!);
+      }
+    });
+  }
 
   // Design tokens matching the "Pro" Look
   final Color backgroundColor = const Color(0xFFF8F9FA); // Off-white/Cream
@@ -36,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('HOME SCREEN BUILD TRIGGERED');
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
@@ -91,21 +111,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Row(
                         children: [
-                          _buildHeaderIcon(
-                            icon: Icons.favorite_border_rounded,
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const WishlistScreen(),
-                              ),
+                          if (authProvider.isAuthenticated) ...[
+                            Consumer<NotificationProvider>(
+                              builder: (context, notificationProvider, child) =>
+                                  _buildHeaderIcon(
+                                    icon: Icons.notifications_none_rounded,
+                                    badgeCount:
+                                        notificationProvider.unreadCount,
+                                    onTap: () =>
+                                        context.push(AppRoutes.notifications),
+                                  ),
                             ),
-                          ),
+                            const SizedBox(width: 12),
+                            _buildHeaderIcon(
+                              icon: Icons.favorite_border_rounded,
+                              onTap: () => context.push(AppRoutes.wishlist),
+                            ),
+                          ],
                           const SizedBox(width: 12),
                           _buildHeaderIcon(
-                            icon: Icons.logout_rounded,
+                            icon: authProvider.isAuthenticated
+                                ? Icons.logout_rounded
+                                : Icons.login_rounded,
                             onTap: () {
-                              authProvider.logout();
-                              Navigator.pushReplacementNamed(context, '/login');
+                              if (authProvider.isAuthenticated) {
+                                authProvider.logout();
+                              }
+                              Navigator.pushReplacement(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                              );
                             },
                           ),
                         ],
@@ -196,16 +233,44 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildHeaderIcon({
     required IconData icon,
     required VoidCallback onTap,
+    int badgeCount = 0,
   }) => GestureDetector(
     onTap: onTap,
-    child: Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
-      ),
-      child: Icon(icon, size: 20, color: accentColor),
+    child: Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: Colors.black.withValues(alpha: 0.05)),
+          ),
+          child: Icon(icon, size: 20, color: accentColor),
+        ),
+        if (badgeCount > 0)
+          Positioned(
+            top: -5,
+            right: -5,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+              constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+              child: Text(
+                badgeCount > 99 ? '99+' : badgeCount.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 8,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
     ),
   );
 
@@ -215,9 +280,16 @@ class _HomeScreenState extends State<HomeScreen> {
     IconData activeIcon,
     String label,
   ) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final bool isSelected = _selectedIndex == index;
     return GestureDetector(
-      onTap: () => setState(() => _selectedIndex = index),
+      onTap: () {
+        if (index > 1 && !authProvider.isAuthenticated) {
+          LoginPrompt.show(context);
+          return;
+        }
+        setState(() => _selectedIndex = index);
+      },
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),

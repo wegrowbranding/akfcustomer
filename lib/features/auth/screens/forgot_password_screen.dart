@@ -1,12 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/string_constants.dart';
-import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
 import '../providers/auth_provider.dart';
+import 'login_screen.dart';
 
 enum ForgotPasswordStep { email, otp, newPassword }
 
@@ -116,7 +117,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           message: 'Password changed successfully',
           type: SnackBarType.success,
         );
-        context.go(AppRoutes.login);
+        await Navigator.pushReplacement(
+          context,
+          CupertinoPageRoute(builder: (context) => const LoginScreen()),
+        );
       } else {
         AppSnackBar.show(
           context,

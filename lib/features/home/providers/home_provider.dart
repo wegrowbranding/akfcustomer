@@ -27,7 +27,7 @@ class HomeProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  Future<void> fetchDashboard(String token) async {
+  Future<void> fetchDashboard(String? token) async {
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -35,7 +35,9 @@ class HomeProvider extends ChangeNotifier {
     try {
       final response = await _apiService.get(
         ApiConstants.dashboard,
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        options: token != null && token.isNotEmpty
+            ? Options(headers: {'Authorization': 'Bearer $token'})
+            : null,
       );
 
       final Map<String, dynamic> data = response.data as Map<String, dynamic>;
@@ -53,13 +55,14 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> fetchProducts(
-    String token, {
+    String? token, {
     String search = '',
     int? categoryId,
     String? minPrice,
     String? maxPrice,
     String? sort,
   }) async {
+    _products = [];
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -78,7 +81,9 @@ class HomeProvider extends ChangeNotifier {
       final response = await _apiService.get(
         ApiConstants.products,
         queryParameters: queryParams,
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        options: token != null && token.isNotEmpty
+            ? Options(headers: {'Authorization': 'Bearer $token'})
+            : null,
       );
 
       final Map<String, dynamic> data = response.data as Map<String, dynamic>;
@@ -96,7 +101,9 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchProductDetails(String token, int productId) async {
+  Future<void> fetchProductDetails(String? token, int productId) async {
+    _selectedProduct = null;
+    _relatedProducts = [];
     _isLoading = true;
     _error = null;
     notifyListeners();
@@ -104,7 +111,9 @@ class HomeProvider extends ChangeNotifier {
     try {
       final response = await _apiService.get(
         '${ApiConstants.products}/$productId',
-        options: Options(headers: {'Authorization': 'Bearer $token'}),
+        options: token != null && token.isNotEmpty
+            ? Options(headers: {'Authorization': 'Bearer $token'})
+            : null,
       );
 
       final Map<String, dynamic> data = response.data as Map<String, dynamic>;
@@ -153,6 +162,13 @@ class HomeProvider extends ChangeNotifier {
   void clearSelectedProduct() {
     _selectedProduct = null;
     _relatedProducts = [];
+    _isLoading = true;
+    notifyListeners();
+  }
+
+  void clearProducts() {
+    _products = [];
+    _isLoading = true;
     notifyListeners();
   }
 }

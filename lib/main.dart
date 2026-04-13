@@ -9,6 +9,7 @@ import 'core/services/fcm_service.dart';
 import 'core/themes/app_theme.dart';
 import 'features/auth/providers/auth_provider.dart';
 import 'features/home/providers/home_provider.dart';
+import 'features/notifications/providers/notification_provider.dart';
 import 'features/orders/providers/order_provider.dart';
 import 'features/profile/providers/profile_provider.dart';
 import 'features/shopping/providers/shopping_provider.dart';
@@ -47,6 +48,10 @@ void main() async {
         ChangeNotifierProvider(
           create: (context) =>
               OrderProvider(apiService: context.read<ApiService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              NotificationProvider(apiService: context.read<ApiService>()),
         ),
       ],
       child: MyApp(authProvider: authProvider),

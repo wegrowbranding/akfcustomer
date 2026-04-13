@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
 import '../../../core/constants/string_constants.dart';
-import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_theme.dart';
+import 'login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -145,7 +143,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   GestureDetector(
                     onTap: () {
                       if (_currentPage == _onboardingData.length - 1) {
-                        context.go(AppRoutes.login);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
                       } else {
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 600),

@@ -8,6 +8,7 @@ import '../../features/auth/screens/onboarding_screen.dart';
 import '../../features/auth/screens/register_screen.dart';
 import '../../features/home/screens/home_screen.dart';
 import '../../features/home/screens/product_detail_screen.dart';
+import '../../features/notifications/screens/notification_screen.dart';
 import '../../features/orders/screens/order_list_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../features/shopping/screens/cart_screen.dart';
@@ -24,23 +25,26 @@ class AppRouter {
     refreshListenable: authProvider,
     redirect: (context, state) {
       final isAuthenticated = authProvider.isAuthenticated;
+      final isGuest = authProvider.isGuest;
       final isLoggingIn = state.matchedLocation == AppRoutes.login;
       final isOnboarding = state.matchedLocation == AppRoutes.onboarding;
       final isRegistering = state.matchedLocation == AppRoutes.register;
       final isForgotPassword = state.matchedLocation == AppRoutes.forgotPassword;
 
-      // If not authenticated and not on auth pages, go to onboarding/login
-      if (!isAuthenticated &&
-          !isLoggingIn &&
-          !isRegistering &&
-          !isOnboarding &&
-          !isForgotPassword) {
+      final isAuthPage =
+          isLoggingIn || isRegistering || isOnboarding || isForgotPassword;
+
+      final isPublicRoute =
+          state.matchedLocation == AppRoutes.home ||
+          state.matchedLocation.startsWith(AppRoutes.productDetail);
+
+      // If not authenticated and not a guest and not on auth pages, go to onboarding/login
+      if (!isAuthenticated && !isGuest && !isAuthPage && !isPublicRoute) {
         return AppRoutes.onboarding;
       }
 
-      // If authenticated and on auth pages, go to home
-      if (isAuthenticated &&
-          (isLoggingIn || isRegistering || isOnboarding || isForgotPassword)) {
+      // If authenticated or guest and on auth pages, go to home
+      if ((isAuthenticated || isGuest) && isAuthPage) {
         return AppRoutes.home;
       }
 
@@ -99,6 +103,11 @@ class AppRouter {
         path: AppRoutes.orders,
         name: 'orders',
         builder: (context, state) => const OrderListScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: 'notifications',
+        builder: (context, state) => const NotificationScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

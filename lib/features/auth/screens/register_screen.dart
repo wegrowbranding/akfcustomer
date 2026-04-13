@@ -3,10 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/string_constants.dart';
-import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
 import '../providers/auth_provider.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -51,8 +51,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }
 
       if (response.success) {
-        // AppNavigator.pushReplacementNamed(context, '/login');
-        context.go(AppRoutes.login);
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
       } else {
         String errorMessage = response.message;
         if (response.errors != null) {

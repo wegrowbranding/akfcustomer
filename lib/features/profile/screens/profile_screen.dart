@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/string_constants.dart';
-import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../../auth/screens/login_screen.dart';
 import '../../orders/screens/order_list_screen.dart';
 import '../../shopping/screens/address_list_screen.dart';
 import '../providers/profile_provider.dart';
@@ -592,7 +592,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     onTap: () {
       authProvider.logout();
       AppSnackBar.show(context, message: 'Successfully logged out');
-      context.go(AppRoutes.login);
+      Navigator.pushReplacement(
+        context,
+        CupertinoPageRoute(builder: (context) => const LoginScreen()),
+      );
     },
     child: Container(
       height: 60,

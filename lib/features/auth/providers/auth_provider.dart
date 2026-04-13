@@ -9,12 +9,14 @@ class AuthProvider extends ChangeNotifier {
   User? _user;
   String? _token;
   bool _isLoading = false;
+  bool _isGuest = false;
 
   final AuthRepository _authRepository;
 
   User? get user => _user;
   String? get token => _token;
   bool get isLoading => _isLoading;
+  bool get isGuest => _isGuest;
   bool get isAuthenticated => _token != null;
 
   Future<void> init() async {
@@ -23,8 +25,14 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void continueAsGuest() {
+    _isGuest = true;
+    notifyListeners();
+  }
+
   Future<AuthResponse> login(String email, String password) async {
     _isLoading = true;
+    _isGuest = false;
     notifyListeners();
 
     try {
@@ -52,6 +60,7 @@ class AuthProvider extends ChangeNotifier {
     required String password,
   }) async {
     _isLoading = true;
+    _isGuest = false;
     notifyListeners();
 
     try {
@@ -82,9 +91,13 @@ class AuthProvider extends ChangeNotifier {
       await _authRepository.logout();
       _token = null;
       _user = null;
+      _isGuest = false;
       notifyListeners();
     } catch (e) {
       // Handle logout error if needed
+      _token = null;
+      _user = null;
+      _isGuest = false;
       notifyListeners();
     }
   }
@@ -92,6 +105,7 @@ class AuthProvider extends ChangeNotifier {
   void forceLogout() {
     _token = null;
     _user = null;
+    _isGuest = false;
     _isLoading = false;
     notifyListeners();
   }

@@ -5,6 +5,7 @@ import '../../../core/constants/api_constants.dart';
 import '../../../core/constants/string_constants.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
+import '../../../core/widgets/login_prompt.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../shopping/providers/shopping_provider.dart';
 import '../models/home_models.dart';
@@ -44,35 +45,37 @@ class _ProductListScreenState extends State<ProductListScreen> {
   void initState() {
     super.initState();
     _searchController.text = widget.searchText ?? '';
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final token = Provider.of<AuthProvider>(context, listen: false).token;
-      if (token != null) {
-        Provider.of<ShoppingProvider>(
-          context,
-          listen: false,
-        ).fetchWishlist(token);
-        Provider.of<HomeProvider>(context, listen: false).fetchProducts(
-          token,
-          categoryId: widget.categoryId,
-          search: widget.searchText ?? '',
-        );
-      }
-    });
+
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    final token = auth.token;
+
+    homeProvider.clearProducts();
+    homeProvider.fetchProducts(
+      token,
+      categoryId: widget.categoryId,
+      search: widget.searchText ?? '',
+    );
+
+    if (token != null) {
+      Provider.of<ShoppingProvider>(
+        context,
+        listen: false,
+      ).fetchWishlist(token);
+    }
   }
 
   void _onSearch() {
     final token = Provider.of<AuthProvider>(context, listen: false).token;
-    if (token != null) {
-      setState(() {}); // Ensure UI shows loading or current state
-      Provider.of<HomeProvider>(context, listen: false).fetchProducts(
-        token,
-        search: _searchController.text.trim(),
-        categoryId: widget.categoryId,
-        minPrice: _minPriceController.text.trim(),
-        maxPrice: _maxPriceController.text.trim(),
-        sort: _selectedSort,
-      );
-    }
+    setState(() {}); // Ensure UI shows loading or current state
+    Provider.of<HomeProvider>(context, listen: false).fetchProducts(
+      token,
+      search: _searchController.text.trim(),
+      categoryId: widget.categoryId,
+      minPrice: _minPriceController.text.trim(),
+      maxPrice: _maxPriceController.text.trim(),
+      sort: _selectedSort,
+    );
   }
 
   void _resetLocalFilters() {
@@ -262,13 +265,11 @@ class _ProductListScreenState extends State<ProductListScreen> {
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) {
           final token = Provider.of<AuthProvider>(context, listen: false).token;
-          if (token != null) {
-            // Reset provider to all products when this screen is closed
-            Provider.of<HomeProvider>(
-              context,
-              listen: false,
-            ).fetchProducts(token);
-          }
+          // Reset provider to all products when this screen is closed
+          Provider.of<HomeProvider>(
+            context,
+            listen: false,
+          ).fetchProducts(token);
         }
       },
       child: Scaffold(
@@ -516,6 +517,8 @@ class _ProductListItemCard extends StatelessWidget {
                                   type: SnackBarType.success,
                                 );
                               }
+                            } else {
+                              LoginPrompt.show(context);
                             }
                           },
                           child: Container(
@@ -590,6 +593,8 @@ class _ProductListItemCard extends StatelessWidget {
                                 type: SnackBarType.success,
                               );
                             }
+                          } else {
+                            LoginPrompt.show(context);
                           }
                         },
                         child: Container(

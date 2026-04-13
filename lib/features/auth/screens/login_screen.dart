@@ -6,6 +6,7 @@ import '../../../core/constants/string_constants.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
+import '../../home/screens/home_screen.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -44,7 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
       }
 
       if (response.success) {
-        context.go(AppRoutes.home);
+        await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const HomeScreen()),
+        );
       } else {
         AppSnackBar.show(
           context,
@@ -234,6 +238,32 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          Provider.of<AuthProvider>(
+                            context,
+                            listen: false,
+                          ).continueAsGuest();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'CONTINUE WITHOUT LOGIN',
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.2,
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),

@@ -24,15 +24,14 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final token = Provider.of<AuthProvider>(context, listen: false).token;
-      if (token != null) {
-        Provider.of<ProfileProvider>(
-          context,
-          listen: false,
-        ).fetchProductReviews(token, widget.productId);
-      }
-    });
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    if (token != null) {
+      Provider.of<ProfileProvider>(
+        context,
+        listen: false,
+      ).fetchProductReviews(token, widget.productId);
+    }
   }
 
   @override

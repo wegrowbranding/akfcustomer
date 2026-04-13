@@ -33,12 +33,12 @@ class ApiService {
             }
             options.headers['Accept'] = 'application/json';
 
-            if (kDebugMode) {
-              debugPrint('API Request: ${options.method} ${options.uri}');
-              if (options.data != null) {
-                debugPrint('Request Data: ${options.data}');
-              }
+            // if (kDebugMode) {
+            debugPrint('API Request: ${options.method} ${options.uri}');
+            if (options.data != null) {
+              debugPrint('Request Data: ${options.data}');
             }
+            // }
 
             handler.next(options);
           } catch (e) {
@@ -46,12 +46,12 @@ class ApiService {
           }
         },
         onResponse: (response, handler) {
-          if (kDebugMode) {
-            debugPrint(
-              'API Response: ${response.statusCode} ${response.realUri}',
-            );
-            debugPrint('Response Data: ${response.data}');
-          }
+          // if (kDebugMode) {
+          debugPrint(
+            'API Response: ${response.statusCode} ${response.realUri}',
+          );
+          debugPrint('Response Data: ${response.data}');
+          // }
 
           // Check if response contains valid_token: false
           if (response.data is Map<String, dynamic>) {
@@ -64,12 +64,12 @@ class ApiService {
           handler.next(response);
         },
         onError: (DioException error, handler) {
-          if (kDebugMode) {
-            debugPrint('API Error: ${error.type} ${error.message}');
-            if (error.response != null) {
-              debugPrint('Error Response: ${error.response?.data}');
-            }
+          // if (kDebugMode) {
+          debugPrint('API Error: ${error.type} ${error.message}');
+          if (error.response != null) {
+            debugPrint('Error Response: ${error.response?.data}');
           }
+          // }
 
           // Handle auth errors and not 200 status with valid_token: false
           if (error.response != null) {

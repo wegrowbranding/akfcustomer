@@ -33,4 +33,7 @@ class ApiConstants {
   static const String addDevice = '/devices/add';
   static const String deviceLastActive = '/devices/update-last-active';
   static const String logoutDevice = '/devices/logout';
+  static const String notifications = '/notifications';
+  static const String markRead = '/notifications/mark-read';
+  static const String unreadCount = '/notifications/unread-count';
 }

@@ -8,6 +8,7 @@ import '../../../core/constants/string_constants.dart';
 import '../../../core/routes/app_routes.dart';
 import '../../../core/themes/app_theme.dart';
 import '../../../core/widgets/app_snackbar.dart';
+import '../../../core/widgets/login_prompt.dart';
 import '../../auth/providers/auth_provider.dart';
 import '../../shopping/providers/shopping_provider.dart';
 import '../../shopping/screens/address_list_screen.dart';
@@ -47,6 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final shopping = Provider.of<ShoppingProvider>(context, listen: false);
 
     if (auth.token == null) {
+      LoginPrompt.show(context);
       return;
     }
 
@@ -67,6 +69,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final auth = Provider.of<AuthProvider>(context, listen: false);
     final shopping = Provider.of<ShoppingProvider>(context, listen: false);
     if (auth.token == null) {
+      LoginPrompt.show(context);
       return;
     }
 
@@ -88,18 +91,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final token = Provider.of<AuthProvider>(context, listen: false).token;
-      if (token != null) {
-        final home = Provider.of<HomeProvider>(context, listen: false);
-        final shopping = Provider.of<ShoppingProvider>(context, listen: false);
+    final auth = Provider.of<AuthProvider>(context, listen: false);
+    final token = auth.token;
+    final home = Provider.of<HomeProvider>(context, listen: false);
+    final shopping = Provider.of<ShoppingProvider>(context, listen: false);
 
-        home.fetchProductDetails(token, widget.productId);
-        shopping.markAsViewed(token, widget.productId);
-        shopping.checkProductInWishlist(token, widget.productId);
-
-      }
-    });
+    home.clearSelectedProduct();
+    home.fetchProductDetails(token, widget.productId);
+    if (token != null) {
+      shopping.markAsViewed(token, widget.productId);
+      shopping.checkProductInWishlist(token, widget.productId);
+    }
   }
 
   @override
@@ -145,7 +147,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         actions: [
           Consumer<ShoppingProvider>(
             builder: (context, shopping, child) {
-              final isProductWishlisted = shopping.isWishlisted(widget.productId);
+              final isProductWishlisted = shopping.isWishlisted(
+                widget.productId,
+              );
               return CircleAvatar(
                 backgroundColor: Colors.white.withValues(alpha: 0.9),
                 child: IconButton(
@@ -153,7 +157,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ? () => _toggleWishlist(false)
                       : () => _toggleWishlist(true),
                   icon: Icon(
-                    isProductWishlisted ? Icons.favorite : Icons.favorite_border,
+                    isProductWishlisted
+                        ? Icons.favorite
+                        : Icons.favorite_border,
                     color: isProductWishlisted ? primaryColor : Colors.black87,
                     size: 20,
                   ),
@@ -447,26 +453,36 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       MaterialPageRoute(
         builder: (context) => Scaffold(
           backgroundColor: Colors.black,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.close, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ),
-          body: Center(
-            child: InteractiveViewer(
-              minScale: 0.5,
-              maxScale: 4,
-              child: Hero(
-                tag: 'product_image_$mediaId',
-                child: Image.network(
-                  ApiConstants.storageUrl(mediaId),
-                  fit: BoxFit.contain,
+          body: Stack(
+            children: [
+              Center(
+                child: InteractiveViewer(
+                  minScale: 0.5,
+                  maxScale: 4,
+                  boundaryMargin: const EdgeInsets.all(20),
+                  child: Hero(
+                    tag: 'product_image_$mediaId',
+                    child: Image.network(
+                      ApiConstants.storageUrl(mediaId),
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      height: double.infinity,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              Positioned(
+                top: MediaQuery.of(context).padding.top + 10,
+                left: 16,
+                child: CircleAvatar(
+                  backgroundColor: Colors.black45,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.white),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -613,11 +629,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           flex: 3,
           child: GestureDetector(
             onTap: () async {
+              final auth = Provider.of<AuthProvider>(context, listen: false);
+              if (auth.token == null) {
+                LoginPrompt.show(context);
+                return;
+              }
               await _addToCart();
-              await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AddressListScreen()),
-              );
+              if (mounted) {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddressListScreen()),
+                );
+              }
             },
             child: Container(
               height: 60,
@@ -725,6 +748,8 @@ class _RelatedProductCard extends StatelessWidget {
                                 type: SnackBarType.success,
                               );
                             }
+                          } else {
+                            LoginPrompt.show(context);
                           }
                         },
                         child: Container(
